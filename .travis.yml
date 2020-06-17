@@ -3,6 +3,10 @@ deploy:
   provider: firebase
   token:
     secure: YOUR ENCRYPTED token
+
+before_script:
+  - npm install firebase-tools -g
+
 env:
   global:
     secure: d6psxAT4l9PlprBBIC4anUwz5tIFsz2r5Sn21Qg7Bd9BoPCu+CY0b8IMBkmqxdNqKDr8cSLYkUg8kwmIgnzn/oPDEug4IE96qasJyd4ZQPujENZKT2vd3TmW6f761OE3xqxYSl33FrpP5CmejqpwGR9v4wemnUKFkxsiauz6M9SKuYEynZh8X6P6/YaTFZj1FchMnP94I7rXxEhWCO32xHjOcYFTfGiHoxs2UOU+loRT1AsZihhfpcoNYmrQf0domhzdJIllu/phZTIPm6FclRc0LaFeGAyeY+EBOynSnS0mFD33xuAGOemRvXoNZkOpC7z3K/1nWhUazHtodoqvR7gnVM1fQANvdEFtBm9mpByCrc5Yw7h5WAYNIta3+cKi+dUdf+Zp95gsFHPOtzMhpU10Jb5SAr9EHKAbcb1qwbSkIa/eZLGme8CP/CrSV8CR0iRaDVR6bJ5QODhZm+1bcfvNAM3KDx+UVS9+kunjqQcub6pNHPfKlgva7jQ6YPxh+ipYWRC0lxCJoI2EsQQ/3o0gcwK2gl+PgZBrIGsNfgjBuEqiy9ZTcN6sj4hQR+Tl/K71DlrsxIGACwLJFea3cS7Vj9i2wBqKacR5xkrM3mhp6fcQ65DTDWYBsS83V3qa8+4nPun9CtAmgdVRC6SHWl09XfqvwT7pyECJC9tSixE=
