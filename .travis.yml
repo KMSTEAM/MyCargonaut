@@ -5,7 +5,7 @@ deploy:
     secure: YOUR ENCRYPTED token
 
 before_script:
-  - npm install firebase-tools -g
+  - curl -sL https://firebase.tools | bash
 
 env:
   global:
