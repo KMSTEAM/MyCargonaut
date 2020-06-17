@@ -1,6 +1,4 @@
-language: node_js
-node_js:
-  - lts/*
+language: minimal
 deploy:
   provider: firebase
   token:
