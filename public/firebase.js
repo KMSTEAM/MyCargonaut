@@ -184,7 +184,7 @@ class FirebaseIntegration {
       request,
       creator,
       createFor,
-      prive,
+      price,
     });
   }
 
@@ -203,7 +203,7 @@ class FirebaseIntegration {
       reviewer,
       review,
       stars,
-    })
+    });
   }
 
   /**
@@ -218,7 +218,7 @@ class FirebaseIntegration {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
       .then((snapshot) => snapshot.docs.map((doc) => {
-        return {id: doc.id, data: doc.data()}
+        return {id: doc.id, data: doc.data()};
       })
     );
   }
