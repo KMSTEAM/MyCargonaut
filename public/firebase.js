@@ -124,11 +124,11 @@ class FirebaseIntegration {
    * @param price {number}
    * @param vehicleID {string}
    * @param creatorID {string}
-   * @returns {Promise<void>}
+   * @returns {Promise<object>}
    */
   createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, vehicleID, creatorID) {
     const vehicle = firebase.firestore().collection('vehicle').doc(vehicleID);
-    const creator = firebase.firestore().collection('creator').doc(creatorID);
+    const creator = firebase.firestore().collection('user').doc(creatorID);
     return firebase.firestore().collection('entry').add({
       type,
       fromCity,
@@ -138,7 +138,72 @@ class FirebaseIntegration {
       price,
       vehicle,
       creator,
-    }).then(() => undefined);
+    });
+  }
+
+  /**
+   * Creates a new Vehicle
+   * @param name {string}
+   * @param ownerID {string}
+   * @param type {string}
+   * @param maxCargoDepth {number}
+   * @param maxCargoHeight {number}
+   * @param maxCargoWidth {number}
+   * @param maxCargoWeight {number}
+   * @return {Promise<object>}
+   */
+  createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, maxCargoWidth, maxCargoWeight) {
+    const owner = firebase.firestore().collection('user').doc(ownerID);
+    return firebase.firestore().collection('vehicle').add({
+      name,
+      owner,
+      type,
+      maxCargoDepth,
+      maxCargoHeight,
+      maxCargoWidth,
+      maxCargoWeight,
+    });
+  }
+
+  /**
+   * Creates a new offer
+   * @param driveID {string}
+   * @param requestID {string}
+   * @param creatorID {string}
+   * @param createForID {string}
+   * @param price {number}
+   * @returns {Promise<object>}
+   */
+  createOffer(driveID, requestID, creatorID, createForID, price) {
+    const drive = firebase.firestore().collection('entry').doc(driveID);
+    const request = firebase.firestore().collection('entry').doc(requestID);
+    const creator = firebase.firestore().collection('user').doc(creatorID);
+    const createFor = firebase.firestore().collection('user').doc(createForID);
+    return firebase.firestore().collection('offer').add({
+      drive,
+      request,
+      creator,
+      createFor,
+      prive,
+    });
+  }
+
+  /**
+   * Creates a new review
+   * @param reviewedID {string}
+   * @param reviewerID {string}
+   * @param review {string}
+   * @param stars {number}
+   */
+  createReview(reviewedID, reviewerID, review, stars) {
+    const reviewed = firebase.firestore().collection('user').doc(reviewedID);
+    const reviewer = firebase.firestore().collection('user').doc(reviewerID);
+    return firebase.firestore().collection('review').add({
+      reviewed,
+      reviewer,
+      review,
+      stars,
+    })
   }
 
   /**
