@@ -1,65 +1,131 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/7.15.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/7.15.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.15.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/7.15.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/7.15.1/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyCargonaut</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
+        integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+    <style>
+        .form-input-hint {
+            display: none;
         }
-      });
+
+        .columns {
+            padding-bottom: 2rem;
+        }
+
+        .cookie {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #cookie-btn {
+            margin: .5rem;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.min.css"
+        integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
+        integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="container grid-lg">
+        <div class="columns" style="padding-bottom: 2rem">
+            <div class="column">
+                <div class="hero bg-gray">
+                    <div class="hero-body">
+                        <h1>MyCargonaut</h1>
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+                            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+                            et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+                            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                            diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+                            voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+                            gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+                            amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+                            dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+                            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+                            amet.
+                        </p>
+                        <p>
+                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+                            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in
+                            vulputate velit esse</p>
+                        <p>You can give it a try with the invitation code <i>demo</i></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <form>
+                    <div class="form-group login">
+                        <label class="form-label" for="login-username">Username</label>
+                        <input class="form-input" id="login-username" type="text" placeholder="Username">
+                    </div>
+                    <div class="form-group login">
+                        <label class="form-label" for="login-password">Password</label>
+                        <input class="form-input" id="login-password" type="password" placeholder="Password">
+                        <p class="form-input-hint">Password or username not correct.</p>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" id="login">Login</button>
+                    </div>
+                </form>
+            </div>
+            <div class="divider-vert" data-content="OR"></div>
+            <div class="column">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label" for="register-username">Username</label>
+                        <input class="form-input" id="register-username" type="text" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="register-password">Password</label>
+                        <input class="form-input" id="register-password" type="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="register-key">Invitation code</label>
+                        <input class="form-input" id="register-key" type="text" placeholder="Invitation code">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" id="register">Sign in</button>
+                        <a href="dash.html" target="_blank" class="btn btn-link btn-block">Learn more</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div id="copyright">
+                    <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span> by <a
+                            href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cookie bg-secondary" id="cookie">
+        <p class="m-0 text-center">Ja, auch diese Webseite verwendet Cookies. <button id="cookie-btn"
+                class="btn btn-sm btn-primary">Alles klar, verstanden!</button></p>
+    </div>
+
+    <script src="auth.js"></script>
+
+    <script language="JavaScript">
+        document.getElementById("cookie-btn").addEventListener("click", function () {
+            document.getElementById("cookie").classList.add("d-none");
+        });
     </script>
-  </body>
+
+</body>
+
 </html>
