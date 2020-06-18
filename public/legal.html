@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyCargonaut - Legal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
+        integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css"
+        integrity="sha256-L7y23l3+p5xkj4XVKXs/SFiJsa1asTc+DHeVBM+3XmE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css"
+        integrity="sha256-LxdDS9G94ArUz2UYVPo5FhSeD4owwcBFAQv2Nl1dNUU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/docs/dist/docs.min.css"
+        integrity="sha256-7KbqWP9VrjsClNobITfwxgliQVxBopclsLJw+/CJwRE=" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.min.css"
+        integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
+        integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="docs-container off-canvas off-canvas-sidebar-show">
+        <div class="docs-navbar">
+            <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
+            <div class="btns d-flex">
+                <section class="navbar-section">
+                    <div class="input-group input-inline">
+                        <input id="search" class="form-input" type="text" placeholder="Search your data" disabled>
+                        <button class="btn btn-secondary ml-1" id="logout">Logout</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="docs-sidebar off-canvas-sidebar" id="sidebar">
+            <div class="docs-brand"><a class="docs-logo" href="dash.html">
+                    <h2>MyCargonaut</h2>
+                </a>
+            </div>
+            <div class="docs-nav">
+                <div class="accordion-container">
+                    <div class="accordion">
+                        <input id="accordion-market" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                            checked="checked">
+                        <label class="accordion-header c-hand" for="accordion-market">Marketplace</label>
+                        <div class="accordion-body">
+                            <ul class="menu menu-nav">
+                                <li class="menu-item"><a href="offer-drive.html">Offer a drive</a>
+                                </li>
+                                <li class="menu-item"><a href="request-drive.html">Request a drive</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="accordion">
+                        <input id="accordion-account" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                            checked="checked">
+                        <label class="accordion-header c-hand" for="accordion-account">Your Account</label>
+                        <div class="accordion-body">
+                            <ul class="menu menu-nav">
+                                <li class="menu-item"><a href="your-drives.html">Your drives</a>
+                                </li>
+                                <li class="menu-item"><a href="your-vehicles.html">Your vehicles</a>
+                                </li>
+                                <li class="menu-item"><a href="account.html">Your account</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="accordion">
+                        <input id="accordion-general" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                            checked="checked">
+                        <label class="accordion-header c-hand" for="accordion-general">General</label>
+                        <div class="accordion-body">
+                            <ul class="menu menu-nav">
+                                <li class="menu-item"><a href="about.html">About</a>
+                                </li>
+                                <li class="menu-item"><a href="legal.html">Legal</a>
+                                </li>
+                                <li class="menu-item"><a href="contact.html">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><a class="off-canvas-overlay" href="#close"></a>
+        <div class="off-canvas-content">
+            <div class="docs-content" id="content">
+                <div class="container">
+                    <h3 class="s-title">Our legal information</h3>
+                    <p>Here you can read the legal information of our platform</p>
+                    <div class="columns">
+                        <div class="column col-lg-12">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="docs-footer container grid-lg" id="copyright">
+                    <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span> by <a
+                            href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="legal.js"></script>
+</body>
+
+</html>
