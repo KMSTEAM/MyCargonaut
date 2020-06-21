@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
         integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
 
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
+    <script src="firebase.js"></script>
+
     <style>
         .form-input-hint {
             display: none;
@@ -124,6 +130,9 @@
         document.getElementById("cookie-btn").addEventListener("click", function () {
             document.getElementById("cookie").classList.add("d-none");
         });
+        window.firebaseIntegration = new FirebaseIntegration('mycargonaut-b6f0d', 'AIzaSyDekDn6bkOY9I66Nw_ttrA7pX4i7wXATKY',
+                '353710341689', '1:353710341689:web:87b6db09e23c2c7b00d7e8', 'G-V98S2HDFE8');
+        firebaseIntegration.init();
     </script>
 
 </body>
