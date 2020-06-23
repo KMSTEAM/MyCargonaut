@@ -37,17 +37,19 @@ class FirebaseIntegration {
    * @param profilePicture {File}
    * @returns {Promise<void>}
    */
-  registerUser(email, password, username, birthDate, profilePicture) {
+  registerUser(email, password, username, birthDate) {
     let _user;
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({user}) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({ user }) => {
       _user = user;
-      const storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + profilePicture.name);
-      return storageRef.put(profilePicture);
-    }).then((profilePictureUploadTask) => {
-      return profilePictureUploadTask.ref.getDownloadURL();
-    }).then((downloadURL) => {
-      return firebase.firestore().collection('user').doc(_user.uid).set({username, birthDate, profilePictureURL: downloadURL});
-    }).then(() => undefined);
+      return firebase.firestore().collection('user').doc(_user.uid).set({ username, birthDate});
+      //const storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + profilePicture.name);
+      //return storageRef.put(profilePicture);
+    });
+    // .then((profilePictureUploadTask) => {
+    //   return profilePictureUploadTask.ref.getDownloadURL();
+    // }).then((downloadURL) => {
+    //   return firebase.firestore().collection('user').doc(_user.uid).set({ username, birthDate, profilePictureURL: downloadURL });
+    // });
   }
 
   /**
@@ -57,7 +59,19 @@ class FirebaseIntegration {
    * @returns {Promise<void>}
    */
   loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => undefined);
+    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+      window.location.href = "dash.html";
+    }, (error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops.. Something went wrong!',
+        text: errorMessage,
+        footer: 'Error Code: ' + errorCode
+      })
+    });
   }
 
   /**
@@ -67,7 +81,7 @@ class FirebaseIntegration {
    */
   getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
-    .then((doc) => doc.data());
+      .then((doc) => doc.data());
   }
 
   /**
@@ -109,9 +123,9 @@ class FirebaseIntegration {
    */
   getOffersForUser(userID) {
     return Promise.all([this._getXForUser("offer", "createdBy", userID),
-      this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
-        return offers.flat();
-      });
+    this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
+      return offers.flat();
+    });
   }
 
   /**
@@ -218,8 +232,8 @@ class FirebaseIntegration {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
       .then((snapshot) => snapshot.docs.map((doc) => {
-        return {id: doc.id, data: doc.data()};
+        return { id: doc.id, data: doc.data() };
       })
-    );
+      );
   }
 }
