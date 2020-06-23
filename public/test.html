@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCargonaut - Mocha</title>
+
+    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="/js/firebase.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha@8.0.1/mocha.css" integrity="sha256-a4j/9d0TJl1bbNF1UC8zUh8pnur9RLQIyyaGAVtj8fM=" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/chai@4.2.0/chai.js" integrity="sha256-Oe35Xz+Zi1EffYsTw5ENBhzOS06LOTV5PSV4OVvnyU8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mocha@8.0.1/mocha.js" integrity="sha256-cm0BUxYF1j7vxhg6LC+fWZUusYp/zmfZThQgNKTGqtE=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<div id="mocha"></div>
+
+<script class="mocha-init">
+  mocha.setup('bdd');
+</script>
+
+<script src="/js/firebase.test.js"></script>
+
+<script class="mocha-exec">
+  mocha.run();
+</script>
+
+</body>
+
+</html>
