@@ -21,7 +21,7 @@
         integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onload="loadCargoCategories()">
     <div class="docs-container off-canvas off-canvas-sidebar-show">
         <div class="docs-navbar">
             <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
@@ -122,13 +122,8 @@
                                     </div>
                                     <div class="form-group py-2">
                                         <div class="input-group col-12">
-                                            <span class="input-group-addon addon-lg col-3 bg-primary">Price</span>
-                                            <select class="form-select select-lg" id="size">
-                                                <option>tiny</option>
-                                                <option>small</option>
-                                                <option>medium</option>
-                                                <option>large</option>
-                                                <option>giant</option>
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">Cargo Size</span>
+                                            <select class="form-select select-lg" id="category">
                                             </select>
                                         </div>
                                     </div>
