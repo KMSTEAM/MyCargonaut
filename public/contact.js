@@ -10,7 +10,10 @@ var subject = getInput(subject);
 var msg = getInput(message);
 
     //console.log("it works");
+
+    //TODO: check if all information were submitted
     messageToFirebase(name,email,subject,message);
+    //TODO: send a feedback message to the user
 
 }
 
