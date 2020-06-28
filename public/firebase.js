@@ -210,7 +210,7 @@ class FirebaseIntegration {
   }
 
   static createMessage(name, email, subject, message) {
-    const messageCreator = firebase.firestore().collection('user').doc(UserID);
+   // const messageCreator = firebase.firestore().collection('user').doc(UserID);
     return firebase.firestore().collection('contactData').add({
       name: name,
       email: email,
