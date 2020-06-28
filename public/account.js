@@ -1,4 +1,3 @@
-document.getElementById("changePassword").addEventListener("click", changePassword);
 document.getElementById("deleteAccount").addEventListener("click", deleteAccount);
 
 function changePassword() {
