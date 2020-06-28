@@ -12,4 +12,3 @@ let msg = document.getElementById("message").value;
     //TODO: send a feedback message to the user
 
 }
-

@@ -1,4 +1,9 @@
 document.getElementById("changePassword").addEventListener("click", changePassword);
+
+
+
 function changePassword() {
-    console.log(123);
+    let newPassword = document.getElementById("newPass").value;
+
+    FirebaseIntegration.changeUserPassword(newPassword);
 }

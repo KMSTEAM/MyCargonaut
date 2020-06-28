@@ -226,4 +226,12 @@ class FirebaseIntegration {
         });
 
   }
+  static changeUserPassword(newPassword){
+    var user = firebase.auth().currentUser;
+    user.updatePassword(newPassword).then(function() {
+      console.log("Passwrod updated successfully");
+    }).catch(function(error) {
+      console.log(error);
+    });
+  }
 }
