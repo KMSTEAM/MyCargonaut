@@ -24,7 +24,11 @@ class FirebaseIntegration {
         return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
       }
     }).then((downloadURL) => {
-      return firebase.firestore().collection('user').doc(_user.uid).set({username, birthDate, profilePictureURL: downloadURL});
+      return firebase.firestore().collection('user').doc(_user.uid).set({
+        username,
+        birthDate,
+        profilePictureURL: downloadURL
+      });
     }).then(() => undefined);
   }
 
@@ -45,7 +49,7 @@ class FirebaseIntegration {
    */
   static getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
-    .then((doc) => doc.data());
+        .then((doc) => doc.data());
   }
 
   /**
@@ -56,6 +60,7 @@ class FirebaseIntegration {
   static getEntriesForUser(userID) {
     return this._getXForUser("entry", "creator", userID);
   }
+
   /**
    * Gets Vehicles for a user
    * @param userID {string}
@@ -64,6 +69,7 @@ class FirebaseIntegration {
   static getVehiclesForUser(userID) {
     return this._getXForUser("vehicle", "owner", userID);
   }
+
   /**
    * Gets Reviews for a user
    * @param userID {string}
@@ -72,6 +78,7 @@ class FirebaseIntegration {
   static getReviewsForUser(userID) {
     return this._getXForUser("review", "for", userID);
   }
+
   /**
    * Gets Entries from a user
    * @param userID {string}
@@ -80,6 +87,7 @@ class FirebaseIntegration {
   static getReviewsFromUser(userID) {
     return this._getXForUser("review", "from", userID);
   }
+
   /**
    * Gets Offers from and to a user
    * @param userID {string}
@@ -88,8 +96,8 @@ class FirebaseIntegration {
   static getOffersForUser(userID) {
     return Promise.all([this._getXForUser("offer", "createdBy", userID),
       this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
-        return offers.flat();
-      });
+      return offers.flat();
+    });
   }
 
   /**
@@ -195,9 +203,27 @@ class FirebaseIntegration {
   static _getXForUser(x, userFieldName, userID) {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
-      .then((snapshot) => snapshot.docs.map((doc) => {
-        return {id: doc.id, data: doc.data()};
-      })
-    );
+        .then((snapshot) => snapshot.docs.map((doc) => {
+              return {id: doc.id, data: doc.data()};
+            })
+        );
+  }
+
+  static createMessage(name, email, subject, message) {
+    const messageCreator = firebase.firestore().collection('user').doc(UserID);
+    return firebase.firestore().collection('contactData').add({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message
+    })
+        .then(function () {
+      console.log("Data sent");
+
+    })
+        .catch(function (error) {
+          console.log(error);
+        });
+
   }
 }
