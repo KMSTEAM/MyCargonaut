@@ -123,7 +123,7 @@ let offer;
 
 describe('#createOffer()', function() {
   it('creates an offer', async function() {
-    offer = await FirebaseIntegration.createOffer(drive.id, request.id, user2.uid, user.uid, 10)
+    offer = await FirebaseIntegration.createOffer(drive.id, request.id, user2.uid, user.uid, 10);
   });
 });
 
@@ -161,11 +161,11 @@ describe('#getEntriesForUser()', function() {
 
 describe('#getOffersForUser()', function() {
   it('lists offers for the user', async function() {
-    const offers = await FirebaseIntegration.getOffersForUser(user.uid)
+    const offers = await FirebaseIntegration.getOffersForUser(user.uid);
     offers.should.have.lengthOf(1);
   });
   it('lists offers from the user', async function() {
-    const offers = await FirebaseIntegration.getOffersForUser(user2.uid)
+    const offers = await FirebaseIntegration.getOffersForUser(user2.uid);
     offers.should.have.lengthOf(1);
   });
 });
@@ -195,4 +195,4 @@ describe('#getReviewsFromUser()', function() {
 after(async function() {
   const docs = [user, user2, userDoc, user2Doc, vehicle, drive, request, offer, review];
   await Promise.all(docs.map(doc => doc.delete()));
-})
+});
