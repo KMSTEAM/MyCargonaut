@@ -19,9 +19,16 @@
         integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
         integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+
+    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="/firebase.js"></script>
 </head>
 
-<body>
+<body onload="loadVehicles()">
     <div class="docs-container off-canvas off-canvas-sidebar-show">
         <div class="docs-navbar">
             <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
@@ -88,52 +95,65 @@
             </div>
         </div><a class="off-canvas-overlay" href="#close"></a>
         <div class="off-canvas-content">
-            <div class="docs-content" id="content">
-                <div class="container">
+            <div class="docs-content"  style=""id="content">
+                <div>
                     <h3 class="s-title">Offer a drive</h3>
                     <p>Here you can offer a ride to anybody on our platform</p>
                     <div class="columns">
-                        <div class="column col-lg-12">
+                        <div class="column col-4">
                             <form action="#forms" class="form-horizontal">
                                 <fieldset>
-                                    <div class="form-group">
-                                        <label class="form-label" for="start">From</label>
-                                        <input class="form-input" type="text" id="start" placeholder="City">
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">From</span>
+                                            <input type="text" class="form-input input-lg col-5" id="start" placeholder="City">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="end">To</label>
-                                        <input class="form-input" type="text" id="end" placeholder="City">
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">To</span>
+                                            <input type="text" class="form-input input-lg col-5" id="end" placeholder="City">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="date">At</label>
-                                        <input class="form-input" id="date" type="date" value="2020-06-22">
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">Date</span>
+                                            <input class="form-input input-lg" id="startTime" type="datetime-local">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="vehicle">With this vehicle</label>
-                                        <select class="form-select" id="vehicle">
-                                            <option>VW Passat</option>
-                                            <option>Smart</option>
-                                            <option>7,5 Tonner</option>
-                                        </select>
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">Date</span>
+                                            <input class="form-input input-lg" id="endTime" type="datetime-local">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="input-example-20">More information</label>
-                                        <textarea class="form-input" id="input-example-20"
-                                            placeholder="Write more details about your drive here" rows="3"></textarea>
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">Vehicle</span>
+                                            <select class="form-select select-lg" id="vehicle">
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="price">For</label>
-                                        <input class="form-input" type="number" id="price" placeholder="Your Price">
+                                    <div class="form-group py-2">
+                                        <div class="input-group col-12">
+                                            <span class="input-group-addon addon-lg col-3 bg-primary">Price</span>
+                                            <input type="text" class="form-input input-lg" id="price" placeholder="0.00€">
+                                        </div>
                                     </div>
-                                    <div class="p-2">
-                                        <button class="btn btn-block btn-primary p-centered">Offer drive</button>
+                                    <div class="form-group py-2">
+                                        <textarea class="form-input col-12"  id="input-example-20"
+                                                  placeholder="Write more details about your drive here" rows="3"></textarea>
                                     </div>
-
-
+                                    <div class="py-2">
+                                        <button class="btn btn-primary btn-lg col-12" onclick="storeDrive()">Offer Drive</button>
+                                    </div>
 
                                 </fieldset>
+                            </form>
                         </div>
-
+                        <div class="column col-8 flex-centered ">
+                            <img src="imgs/truck3.png" alt="" width="60%">
+                        </div>
                     </div>
                 </div>
                 <div class="docs-footer container grid-lg" id="copyright">
@@ -144,8 +164,9 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script src="offer-ride.js"></script>
+    <script src="offer-drive.js"></script>
+
+
 </body>
 
 </html>
