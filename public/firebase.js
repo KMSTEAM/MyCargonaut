@@ -13,7 +13,9 @@ class FirebaseIntegration {
    */
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({user}) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({
+      user
+    }) => {
       _user = user;
       if (profilePicture) {
         const storageRef = firebase.storage().ref('users/' + user.uid + '/profilePicture/' + profilePicture.name);
@@ -39,7 +41,7 @@ class FirebaseIntegration {
    * @returns {Promise<void>}
    */
   static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => undefined);
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   /**
@@ -95,7 +97,8 @@ class FirebaseIntegration {
    */
   static getOffersForUser(userID) {
     return Promise.all([this._getXForUser("offer", "createdBy", userID),
-      this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
+      this._getXForUser("offer", "createdFor", userID)
+    ]).then((offers) => {
       return offers.flat();
     });
   }
@@ -232,6 +235,32 @@ class FirebaseIntegration {
       console.log("Passwrod updated successfully");
     }).catch(function(error) {
       console.log(error);
+      .then((snapshot) => snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          data: doc.data()
+        };
+      }));
+  }
+
+  /**
+   * Internal method for deleting a document of a specific user
+   * @param x <string>
+   * @param collection <string>
+   * @param userFieldName <string>
+   * @param userID <string>
+   * @returns boolean
+   * @private
+   */
+  static deleteXFromUser(x, collection, userFieldName, userID) {
+
+    const userRef = firebase.firestore().collection('user').doc(userID);
+    firebase.firestore().collection(collection).doc(x).delete().then(function () {
+      console.log("Document successfully deleted!");
+      return true;
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+      return false;
     });
   }
 }

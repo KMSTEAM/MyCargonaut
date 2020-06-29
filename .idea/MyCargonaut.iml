@@ -8,5 +8,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="firebase-auth" level="application" />
+    <orderEntry type="library" name="firebase-app" level="application" />
+    <orderEntry type="library" name="firebase-firestore" level="application" />
+    <orderEntry type="library" name="firebase-storage" level="application" />
+    <orderEntry type="library" name="sweetalert2" level="application" />
+    <orderEntry type="library" name="spectre.css" level="application" />
   </component>
 </module>
