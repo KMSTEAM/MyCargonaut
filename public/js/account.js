@@ -1,3 +1,7 @@
+window.onload = function(){
+    FirebaseIntegration.checkForRedirect();
+};
+
 document.getElementById("deleteAccount").addEventListener("click", deleteAccount);
 
 function changePassword() {

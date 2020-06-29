@@ -290,4 +290,13 @@ class FirebaseIntegration {
   static _enableTesting() {
     this.testing = true;
   }
+
+  static checkForRedirect(){
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  }
 }
