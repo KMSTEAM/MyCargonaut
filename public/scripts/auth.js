@@ -69,7 +69,19 @@ loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const email = loginForm["login-email"].value;
     const password = loginForm["login-password"].value;
-    FirebaseIntegration.loginUser(email, password);
+    FirebaseIntegration.loginUser(email, password).then(() => {
+        window.location.href = "dash.html";
+    }, (error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops.. Something went wrong!',
+            text: errorMessage,
+            footer: 'Error Code: ' + errorCode
+        });
+    });
 });
 
 

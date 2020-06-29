@@ -9,7 +9,7 @@ class FirebaseIntegration {
    * @param username {string}
    * @param birthDate {Date}
    * @param profilePicture {File}
-   * @returns {Promise<void>}
+   * @returns {Promise<{user: object, doc: object}>}
    */
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
@@ -26,44 +26,43 @@ class FirebaseIntegration {
         return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
       }
     }).then((downloadURL) => {
-      return firebase.firestore().collection('user').doc(_user.uid).set({
+      const docRef = firebase.firestore().collection(this.testify('user')).doc(_user.uid);
+      console.log(docRef);
+      return docRef.set({
         username,
         birthDate,
         profilePictureURL: downloadURL
-      });
-    }).then(() => undefined);
+      }).then(() => docRef);
+    }).then((userDoc) => {
+      return {user: _user, doc: userDoc};
+    });
   }
 
   /**
    * Login in Cargonaut user
    * @param email {string}
    * @param password {string}
-   * @returns {Promise<void>}
+   * @returns {Promise<object>}
    */
   static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-      window.location.href = "dash.html";
-    }, (error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops.. Something went wrong!',
-        text: errorMessage,
-        footer: 'Error Code: ' + errorCode
-      })
-    });
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   /**
    * Gets an Cargonaut user by id
    * @param id {string}
-   * @returns {Promise<object>}
+   * @returns {Promise<{id: string, data: object}>}
    */
   static getUserByID(id) {
-    return firebase.firestore().collection('user').doc(id).get()
-      .then((doc) => doc.data());
+    const docRef = firebase.firestore().collection(this.testify('user')).doc(id);
+    console.log(docRef);
+    return docRef.get()
+      .then((doc) => {
+        if (!doc.data()) {
+          return undefined;
+        }
+        return {id: doc.id, data: doc.data()};
+      });
   }
 
   /**
@@ -90,16 +89,16 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getReviewsForUser(userID) {
-    return this._getXForUser("review", "for", userID);
+    return this._getXForUser("review", "reviewed", userID);
   }
 
   /**
-   * Gets Entries from a user
+   * Gets Rewies from a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getReviewsFromUser(userID) {
-    return this._getXForUser("review", "from", userID);
+    return this._getXForUser("review", "reviewer", userID);
   }
 
   /**
@@ -108,7 +107,7 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getOffersForUser(userID) {
-    return Promise.all([this._getXForUser("offer", "createdBy", userID),
+    return Promise.all([this._getXForUser("offer", "creator", userID),
       this._getXForUser("offer", "createdFor", userID)
     ]).then((offers) => {
       return offers.flat();
@@ -128,9 +127,9 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, vehicleID, creatorID) {
-    const vehicle = firebase.firestore().collection('vehicle').doc(vehicleID);
-    const creator = firebase.firestore().collection('user').doc(creatorID);
-    return firebase.firestore().collection('entry').add({
+    const vehicle = firebase.firestore().collection(this.testify('vehicle')).doc(vehicleID);
+    const creator = firebase.firestore().collection(this.testify('user')).doc(creatorID);
+    return firebase.firestore().collection(this.testify('entry')).add({
       type,
       fromCity,
       toCity,
@@ -154,8 +153,8 @@ class FirebaseIntegration {
    * @return {Promise<object>}
    */
   static createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, maxCargoWidth, maxCargoWeight) {
-    const owner = firebase.firestore().collection('user').doc(ownerID);
-    return firebase.firestore().collection('vehicle').add({
+    const owner = firebase.firestore().collection(this.testify('user')).doc(ownerID);
+    return firebase.firestore().collection(this.testify('vehicle')).add({
       name,
       owner,
       type,
@@ -176,15 +175,15 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static createOffer(driveID, requestID, creatorID, createForID, price) {
-    const drive = firebase.firestore().collection('entry').doc(driveID);
-    const request = firebase.firestore().collection('entry').doc(requestID);
-    const creator = firebase.firestore().collection('user').doc(creatorID);
-    const createFor = firebase.firestore().collection('user').doc(createForID);
-    return firebase.firestore().collection('offer').add({
+    const drive = firebase.firestore().collection(this.testify('entry')).doc(driveID);
+    const request = firebase.firestore().collection(this.testify('entry')).doc(requestID);
+    const creator = firebase.firestore().collection(this.testify('user')).doc(creatorID);
+    const createdFor = firebase.firestore().collection(this.testify('user')).doc(createForID);
+    return firebase.firestore().collection(this.testify('offer')).add({
       drive,
       request,
       creator,
-      createFor,
+      createdFor,
       price,
     });
   }
@@ -197,9 +196,9 @@ class FirebaseIntegration {
    * @param stars {number}
    */
   static createReview(reviewedID, reviewerID, review, stars) {
-    const reviewed = firebase.firestore().collection('user').doc(reviewedID);
-    const reviewer = firebase.firestore().collection('user').doc(reviewerID);
-    return firebase.firestore().collection('review').add({
+    const reviewed = firebase.firestore().collection(this.testify('user')).doc(reviewedID);
+    const reviewer = firebase.firestore().collection(this.testify('user')).doc(reviewerID);
+    return firebase.firestore().collection(this.testify('review')).add({
       reviewed,
       reviewer,
       review,
@@ -216,7 +215,8 @@ class FirebaseIntegration {
    * @private
    */
   static _getXForUser(x, userFieldName, userID) {
-    const userRef = firebase.firestore().collection('user').doc(userID);
+    x = this.testify(x);
+    const userRef = firebase.firestore().collection(this.testify('user')).doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
         .then((snapshot) => snapshot.docs.map((doc) => {
               return {id: doc.id, data: doc.data()};
@@ -269,5 +269,25 @@ class FirebaseIntegration {
       console.error("Error removing document: ", error);
       return false;
     });
+  }
+
+  /**
+   * Appends 'testing/' to inp if testing is enabled
+   * @param inp {string}
+   * @returns {string}
+   */
+  static testify(inp) {
+    if (this.testing) {
+      return 'testing/data/' + inp;
+    }
+    return inp;
+  }
+
+  /**
+   * Enables the testing mode
+   * @private
+   */
+  static _enableTesting() {
+    this.testing = true;
   }
 }
