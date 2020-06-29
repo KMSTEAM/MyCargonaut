@@ -34,7 +34,7 @@ function loadDrives() {
 
 function cancelDrive(id) {
 
-    FirebaseIntegration._deleteXFromUser(id, "entry", "creator", firebase.auth().currentUser.uid);
+    FirebaseIntegration.deleteXFromUser(id, "entry", "creator", firebase.auth().currentUser.uid);
     loadDrives();
 
 }
