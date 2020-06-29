@@ -26,12 +26,16 @@ class FirebaseIntegration {
         return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
       }
     }).then((downloadURL) => {
-      return firebase.firestore().collection('user').doc(_user.uid).set({
+      const docRef = firebase.firestore().collection(this.testify('user')).doc(_user.uid);
+      console.log(docRef);
+      return docRef.set({
         username,
         birthDate,
         profilePictureURL: downloadURL
-      });
-    }).then(() => undefined);
+      }).then(() => docRef);
+    }).then((userDoc) => {
+      return {user: _user, doc: userDoc};
+    });
   }
 
   /**
@@ -41,19 +45,7 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-      window.location.href = "dash.html";
-    }, (error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops.. Something went wrong!',
-        text: errorMessage,
-        footer: 'Error Code: ' + errorCode
-      })
-    });
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   /**
@@ -62,8 +54,15 @@ class FirebaseIntegration {
    * @returns {Promise<{id: string, data: object}>}
    */
   static getUserByID(id) {
-    return firebase.firestore().collection('user').doc(id).get()
-      .then((doc) => doc.data());
+    const docRef = firebase.firestore().collection(this.testify('user')).doc(id);
+    console.log(docRef);
+    return docRef.get()
+      .then((doc) => {
+        if (!doc.data()) {
+          return undefined;
+        }
+        return {id: doc.id, data: doc.data()};
+      });
   }
 
   /**
@@ -108,7 +107,7 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getOffersForUser(userID) {
-    return Promise.all([this._getXForUser("offer", "createdBy", userID),
+    return Promise.all([this._getXForUser("offer", "creator", userID),
       this._getXForUser("offer", "createdFor", userID)
     ]).then((offers) => {
       return offers.flat();

@@ -101,6 +101,8 @@ describe('#getUserByID()', function() {
 let vehicle;
 
 describe('#createVehicle()', function() {
+  this.timeout(10000);
+
   it('creates a vehicle', async function() {
     vehicle = await FirebaseIntegration.createVehicle("mycar", user.uid,
         'car', 2, 2, 2, 2);
@@ -111,6 +113,8 @@ describe('#createVehicle()', function() {
 let drive, request;
 
 describe('#createEntry()', function() {
+  this.timeout(10000);
+
   it('creates an drive entry', async function() {
     drive = await FirebaseIntegration.createEntry("drive", "Marburg", "Gießen", new Date(), new Date(), 15, vehicle.id, user.uid);
   });
@@ -122,6 +126,8 @@ describe('#createEntry()', function() {
 let offer;
 
 describe('#createOffer()', function() {
+  this.timeout(10000);
+
   it('creates an offer', async function() {
     offer = await FirebaseIntegration.createOffer(drive.id, request.id, user2.uid, user.uid, 10);
   });
@@ -130,12 +136,16 @@ describe('#createOffer()', function() {
 let review;
 
 describe('#createReview()', function() {
+  this.timeout(10000);
+
   it('creates a review', async function() {
     review = await FirebaseIntegration.createReview(user.uid, user2.uid, "Top", 5);
   });
 });
 
 describe('#getVehiclesForUser()', function() {
+  this.timeout(10000);
+
   it('lists vehicles for the user', async function() {
     const vehicles = await FirebaseIntegration.getVehiclesForUser(user.uid);
     vehicles.should.have.lengthOf(1);
@@ -160,6 +170,8 @@ describe('#getEntriesForUser()', function() {
 });
 
 describe('#getOffersForUser()', function() {
+  this.timeout(10000);
+
   it('lists offers for the user', async function() {
     const offers = await FirebaseIntegration.getOffersForUser(user.uid);
     offers.should.have.lengthOf(1);
@@ -171,6 +183,8 @@ describe('#getOffersForUser()', function() {
 });
 
 describe('#getReviewsForUser()', function() {
+  this.timeout(10000);
+
   it('lists reviews for the user', async function() {
     const reviews = await FirebaseIntegration.getReviewsForUser(user.uid);
     reviews.should.have.lengthOf(1);
@@ -182,6 +196,8 @@ describe('#getReviewsForUser()', function() {
 });
 
 describe('#getReviewsFromUser()', function() {
+  this.timeout(10000);
+
   it('does not list reviews from other users', async function() {
     const reviews = await FirebaseIntegration.getReviewsFromUser(user.uid);
     reviews.should.have.lengthOf(0);
@@ -192,7 +208,27 @@ describe('#getReviewsFromUser()', function() {
   });
 });
 
+before(async function() {
+  this.timeout(10000);
+
+  try {
+    const {user} = await FirebaseIntegration.loginUser("test@example.org", "123456");
+    const {id} = await FirebaseIntegration.getUserByID(user.uid);
+    const userDoc = firebase.firestore().collection(FirebaseIntegration.testify('user')).doc(id);
+    await Promise.all([user.delete(), userDoc.delete()]);
+  } catch (e) {console.error(e);}
+  try {
+    const {user} = await FirebaseIntegration.loginUser("test2@example.org", "123456");
+    const {id} = await FirebaseIntegration.getUserByID(user.uid);
+    const userDoc = firebase.firestore().collection(FirebaseIntegration.testify('user')).doc(id);
+    await Promise.all([user.delete(), userDoc.delete()]);
+  } catch (e) {console.error(e);}
+});
+
 after(async function() {
+  this.timeout(10000);
+
   const docs = [user, user2, userDoc, user2Doc, vehicle, drive, request, offer, review];
+  console.log(docs);
   await Promise.all(docs.map(doc => doc.delete()));
 });
