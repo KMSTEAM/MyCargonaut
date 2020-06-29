@@ -40,8 +40,20 @@ class FirebaseIntegration {
    * @param password {string}
    * @returns {Promise<void>}
    */
-  static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+  loginUser(email, password) {
+    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+      window.location.href = "dash.html";
+    }, (error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops.. Something went wrong!',
+        text: errorMessage,
+        footer: 'Error Code: ' + errorCode
+      })
+    });
   }
 
   /**
@@ -51,7 +63,7 @@ class FirebaseIntegration {
    */
   static getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
-        .then((doc) => doc.data());
+      .then((doc) => doc.data());
   }
 
   /**
@@ -235,14 +247,9 @@ class FirebaseIntegration {
       console.log("Passwrod updated successfully");
     }).catch(function(error) {
       console.log(error);
-      .then((snapshot) => snapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          data: doc.data()
-        };
-      }));
+    });
   }
-
+      
   /**
    * Internal method for deleting a document of a specific user
    * @param x <string>

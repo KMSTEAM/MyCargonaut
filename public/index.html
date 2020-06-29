@@ -9,12 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
         integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
 
-    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
-    <script src="firebase.js"></script>
-
     <style>
         .form-input-hint {
             display: none;
@@ -37,8 +31,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.min.css"
         integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
-        integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -50,21 +43,7 @@
                     <div class="hero-body">
                         <h1>MyCargonaut</h1>
                         <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-                            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-                            et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-                            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                            diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                            voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-                            gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-                            amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                            dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-                            amet.
                         </p>
-                        <p>
-                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl
-                            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in
-                            vulputate velit esse</p>
                         <p>You can give it a try with the invitation code <i>demo</i></p>
                     </div>
                 </div>
@@ -72,10 +51,10 @@
         </div>
         <div class="columns">
             <div class="column">
-                <form>
+                <form id="loginForm">
                     <div class="form-group login">
-                        <label class="form-label" for="login-username">Username</label>
-                        <input class="form-input" id="login-username" type="text" placeholder="Username">
+                        <label class="form-label" for="login-email">E-Mail</label>
+                        <input class="form-input" id="login-email" type="text" placeholder="E-Mail">
                     </div>
                     <div class="form-group login">
                         <label class="form-label" for="login-password">Password</label>
@@ -83,28 +62,33 @@
                         <p class="form-input-hint">Password or username not correct.</p>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary btn-block" id="login">Login</button>
+                        <button class="btn btn-success btn-block" id="login-btn">Login</button>
+                        <a href="dash.html" target="_blank" class="btn btn-link btn-block">Forgot Password?</a>
+
                     </div>
                 </form>
             </div>
             <div class="divider-vert" data-content="OR"></div>
             <div class="column">
-                <form>
+                <form id="signupForm">
                     <div class="form-group">
-                        <label class="form-label" for="register-username">Username</label>
-                        <input class="form-input" id="register-username" type="text" placeholder="Username">
+                        <label class="form-label" for="signup-email">E-Mail</label>
+                        <input class="form-input" id="signup-email" type="text" placeholder="id@example.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="register-password">Password</label>
-                        <input class="form-input" id="register-password" type="password" placeholder="Password">
+                        <label class="form-label" for="signup-username">Username</label>
+                        <input class="form-input" id="signup-username" type="text" placeholder="Username">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="register-key">Invitation code</label>
-                        <input class="form-input" id="register-key" type="text" placeholder="Invitation code">
+                        <label class="form-label" for="signup-birthday">Birthday</label>
+                        <input class="form-input" id="signup-birthday" type="date" placeholder="dd/mm/yyyy">
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary btn-block" id="register">Sign in</button>
-                        <a href="dash.html" target="_blank" class="btn btn-link btn-block">Learn more</a>
+                        <label class="form-label" for="signup-password">Password</label>
+                        <input class="form-input" id="signup-password" type="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" id="signup-btn">Sign up</button>
                     </div>
                 </form>
             </div>
@@ -136,11 +120,8 @@
         document.getElementById("cookie-btn").addEventListener("click", function () {
             document.getElementById("cookie").classList.add("d-none");
         });
-        window.firebaseIntegration = new FirebaseIntegration('mycargonaut-b6f0d',
-            'AIzaSyDekDn6bkOY9I66Nw_ttrA7pX4i7wXATKY',
-            '353710341689', '1:353710341689:web:87b6db09e23c2c7b00d7e8', 'G-V98S2HDFE8');
-        firebaseIntegration.init();
     </script>
+    <script src="scripts/auth.js"></script>
 
 </body>
 
