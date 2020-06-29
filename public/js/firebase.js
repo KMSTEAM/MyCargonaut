@@ -13,7 +13,9 @@ class FirebaseIntegration {
    */
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({user}) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({
+      user
+    }) => {
       _user = user;
       if (profilePicture) {
         const storageRef = firebase.storage().ref('users/' + user.uid + '/profilePicture/' + profilePicture.name);
@@ -24,23 +26,12 @@ class FirebaseIntegration {
         return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
       }
     }).then((downloadURL) => {
-      const docRef = firebase.firestore().collection(this.testify('user')).doc(_user.uid);
-      return docRef.set({username, birthDate, profilePictureURL: downloadURL}).then(() => docRef);
-    }).then((userDoc) => {
-      return {user: _user, doc: userDoc}
-    });
-  }
-
-  /**
-   * Deletes a user
-   * @param user {object}
-   * @returns {Promise<object[]>}
-   */
-  static deleteUser(user) {
-    return Promise.all([
-        firebase.firestore().collection(this.testify('user')).doc(user.uid).delete(),
-        user.delete(),
-    ]);
+      return firebase.firestore().collection('user').doc(_user.uid).set({
+        username,
+        birthDate,
+        profilePictureURL: downloadURL
+      });
+    }).then(() => undefined);
   }
 
   /**
@@ -50,7 +41,19 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+      window.location.href = "dash.html";
+    }, (error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops.. Something went wrong!',
+        text: errorMessage,
+        footer: 'Error Code: ' + errorCode
+      })
+    });
   }
 
   /**
@@ -59,13 +62,8 @@ class FirebaseIntegration {
    * @returns {Promise<{id: string, data: object}>}
    */
   static getUserByID(id) {
-    return firebase.firestore().collection(this.testify('user')).doc(id).get()
-    .then((doc) => {
-      if (!doc.data()) {
-        return undefined;
-      }
-      return {id: doc.id, data: doc.data()}
-    });
+    return firebase.firestore().collection('user').doc(id).get()
+      .then((doc) => doc.data());
   }
 
   /**
@@ -76,6 +74,7 @@ class FirebaseIntegration {
   static getEntriesForUser(userID) {
     return this._getXForUser("entry", "creator", userID);
   }
+
   /**
    * Gets Vehicles for a user
    * @param userID {string}
@@ -84,6 +83,7 @@ class FirebaseIntegration {
   static getVehiclesForUser(userID) {
     return this._getXForUser("vehicle", "owner", userID);
   }
+
   /**
    * Gets Reviews for a user
    * @param userID {string}
@@ -92,6 +92,7 @@ class FirebaseIntegration {
   static getReviewsForUser(userID) {
     return this._getXForUser("review", "reviewed", userID);
   }
+
   /**
    * Gets Rewies from a user
    * @param userID {string}
@@ -100,16 +101,18 @@ class FirebaseIntegration {
   static getReviewsFromUser(userID) {
     return this._getXForUser("review", "reviewer", userID);
   }
+
   /**
    * Gets Offers from and to a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getOffersForUser(userID) {
-    return Promise.all([this._getXForUser("offer", "creator", userID),
-      this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
-        return offers.flat();
-      });
+    return Promise.all([this._getXForUser("offer", "createdBy", userID),
+      this._getXForUser("offer", "createdFor", userID)
+    ]).then((offers) => {
+      return offers.flat();
+    });
   }
 
   /**
@@ -216,10 +219,57 @@ class FirebaseIntegration {
     x = this.testify(x);
     const userRef = firebase.firestore().collection(this.testify('user')).doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
-      .then((snapshot) => snapshot.docs.map((doc) => {
-        return {id: doc.id, data: doc.data()};
-      })
-    );
+        .then((snapshot) => snapshot.docs.map((doc) => {
+              return {id: doc.id, data: doc.data()};
+            })
+        );
+  }
+
+  static createMessage(name, email, subject, message) {
+   // const messageCreator = firebase.firestore().collection('user').doc(UserID);
+    return firebase.firestore().collection('contactData').add({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message
+    })
+        .then(function () {
+      console.log("Data sent");
+
+    })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+  }
+  static changeUserPassword(newPassword){
+    var user = firebase.auth().currentUser;
+    user.updatePassword(newPassword).then(function() {
+      console.log("Passwrod updated successfully");
+    }).catch(function(error) {
+      console.log(error);
+    });
+  }
+      
+  /**
+   * Internal method for deleting a document of a specific user
+   * @param x <string>
+   * @param collection <string>
+   * @param userFieldName <string>
+   * @param userID <string>
+   * @returns boolean
+   * @private
+   */
+  static deleteXFromUser(x, collection, userFieldName, userID) {
+
+    const userRef = firebase.firestore().collection('user').doc(userID);
+    firebase.firestore().collection(collection).doc(x).delete().then(function () {
+      console.log("Document successfully deleted!");
+      return true;
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+      return false;
+    });
   }
 
   /**
