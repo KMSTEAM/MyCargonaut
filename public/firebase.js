@@ -242,11 +242,27 @@ class FirebaseIntegration {
 
   }
   static changeUserPassword(newPassword){
-    var user = firebase.auth().currentUser;
-    user.updatePassword(newPassword).then(function() {
-      console.log("Passwrod updated successfully");
-    }).catch(function(error) {
-      console.log(error);
+    //var user = firebase.auth().currentUser;
+    firebase.auth().onAuthStateChanged(function (user){
+      if(user){
+        user.updatePassword(newPassword).then(function() {
+          console.log("Passwrod updated successfully");
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    });
+  }
+
+  static deleteUserAccount(){
+    firebase.auth().onAuthStateChanged(function (user){
+      if(user){
+        user.delete().then(function() {
+          console.log("User account deleted successfully");
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
     });
   }
       
