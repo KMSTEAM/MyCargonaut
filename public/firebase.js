@@ -40,7 +40,7 @@ class FirebaseIntegration {
    * @param password {string}
    * @returns {Promise<void>}
    */
-  loginUser(email, password) {
+  static loginUser(email, password) {
     return firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
       window.location.href = "dash.html";
     }, (error) => {

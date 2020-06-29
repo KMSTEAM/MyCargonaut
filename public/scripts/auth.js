@@ -31,7 +31,7 @@ singupBtn.addEventListener("click", (e) => {
     const password = singupForm["signup-password"].value;
     const birthday = singupForm["signup-birthday"].value;
     const username = singupForm["signup-username"].value;
-    firebaseIntegration.registerUser(email, password, username, birthday).then(() => {
+    FirebaseIntegration.registerUser(email, password, username, birthday).then(() => {
         sendEmailVerification();
         window.location.href = "dash.html";
     }, function (error) {
@@ -69,8 +69,8 @@ loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const email = loginForm["login-email"].value;
     const password = loginForm["login-password"].value;
-    firebaseIntegration.loginUser(email, password);
-})
+    FirebaseIntegration.loginUser(email, password);
+});
 
 
 function sendPasswordReset() {
