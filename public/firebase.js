@@ -13,7 +13,9 @@ class FirebaseIntegration {
    */
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({user}) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({
+      user
+    }) => {
       _user = user;
       if (profilePicture) {
         const storageRef = firebase.storage().ref('users/' + user.uid + '/profilePicture/' + profilePicture.name);
@@ -24,7 +26,11 @@ class FirebaseIntegration {
         return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
       }
     }).then((downloadURL) => {
-      return firebase.firestore().collection('user').doc(_user.uid).set({username, birthDate, profilePictureURL: downloadURL});
+      return firebase.firestore().collection('user').doc(_user.uid).set({
+        username,
+        birthDate,
+        profilePictureURL: downloadURL
+      });
     }).then(() => undefined);
   }
 
@@ -35,7 +41,7 @@ class FirebaseIntegration {
    * @returns {Promise<void>}
    */
   static loginUser(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then(() => undefined);
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   /**
@@ -45,7 +51,7 @@ class FirebaseIntegration {
    */
   static getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
-    .then((doc) => doc.data());
+      .then((doc) => doc.data());
   }
 
   /**
@@ -87,9 +93,10 @@ class FirebaseIntegration {
    */
   static getOffersForUser(userID) {
     return Promise.all([this._getXForUser("offer", "createdBy", userID),
-      this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
-        return offers.flat();
-      });
+      this._getXForUser("offer", "createdFor", userID)
+    ]).then((offers) => {
+      return offers.flat();
+    });
   }
 
   /**
@@ -196,8 +203,31 @@ class FirebaseIntegration {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
       .then((snapshot) => snapshot.docs.map((doc) => {
-        return {id: doc.id, data: doc.data()};
-      })
-    );
+        return {
+          id: doc.id,
+          data: doc.data()
+        };
+      }));
+  }
+
+  /**
+   * Internal method for deleting a document of a specific user
+   * @param x <string>
+   * @param collection <string>
+   * @param userFieldName <string>
+   * @param userID <string>
+   * @returns boolean
+   * @private
+   */
+  static deleteXFromUser(x, collection, userFieldName, userID) {
+
+    const userRef = firebase.firestore().collection('user').doc(userID);
+    firebase.firestore().collection(collection).doc(x).delete().then(function () {
+      console.log("Document successfully deleted!");
+      return true;
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+      return false;
+    });
   }
 }
