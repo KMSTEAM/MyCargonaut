@@ -2,32 +2,6 @@
  * A class Handling the Firebase integration for Cargonaut
  */
 class FirebaseIntegration {
-
-  /**
-   * Creates a new Firebase Integration Object
-   * @param projectID {string}
-   * @param apiKey {string}
-   * @param sendID {string}
-   * @param appID {string}
-   * @param measurementID {string}
-   */
-  constructor(projectID, apiKey, sendID, appID, measurementID) {
-    this.firebaseConfig = {
-      apiKey: apiKey,
-      authDomain: `${projectID}.firebaseapp.com`,
-      databaseURL: `https://${projectID}.firebaseio.com`,
-      projectId: projectID,
-      storageBucket: `${projectID}.appspot.com`,
-      messagingSenderId: sendID,
-      appId: appID,
-      measurementId: measurementID,
-    };
-  }
-
-  init() {
-    return firebase.initializeApp(this.firebaseConfig);
-  }
-
   /**
    * Registers a Cargonaut user in firebase
    * @param email {string}
@@ -37,19 +11,27 @@ class FirebaseIntegration {
    * @param profilePicture {File}
    * @returns {Promise<void>}
    */
-  registerUser(email, password, username, birthDate) {
+  static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({ user }) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password).then(({
+      user
+    }) => {
       _user = user;
-      return firebase.firestore().collection('user').doc(_user.uid).set({ username, birthDate});
-      //const storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + profilePicture.name);
-      //return storageRef.put(profilePicture);
-    });
-    // .then((profilePictureUploadTask) => {
-    //   return profilePictureUploadTask.ref.getDownloadURL();
-    // }).then((downloadURL) => {
-    //   return firebase.firestore().collection('user').doc(_user.uid).set({ username, birthDate, profilePictureURL: downloadURL });
-    // });
+      if (profilePicture) {
+        const storageRef = firebase.storage().ref('users/' + user.uid + '/profilePicture/' + profilePicture.name);
+        return storageRef.put(profilePicture).then((profilePictureUploadTask) => {
+          return profilePictureUploadTask.ref.getDownloadURL();
+        });
+      } else {
+        return firebase.storage().ref('users/default/profilePicture/abstract-user-flat-1.png').getDownloadURL();
+      }
+    }).then((downloadURL) => {
+      return firebase.firestore().collection('user').doc(_user.uid).set({
+        username,
+        birthDate,
+        profilePictureURL: downloadURL
+      });
+    }).then(() => undefined);
   }
 
   /**
@@ -79,7 +61,7 @@ class FirebaseIntegration {
    * @param id {string}
    * @returns {Promise<object>}
    */
-  getUserByID(id) {
+  static getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
       .then((doc) => doc.data());
   }
@@ -89,41 +71,46 @@ class FirebaseIntegration {
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
-  getEntriesForUser(userID) {
+  static getEntriesForUser(userID) {
     return this._getXForUser("entry", "creator", userID);
   }
+
   /**
    * Gets Vehicles for a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
-  getVehiclesForUser(userID) {
+  static getVehiclesForUser(userID) {
     return this._getXForUser("vehicle", "owner", userID);
   }
+
   /**
    * Gets Reviews for a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
-  getReviewsForUser(userID) {
+  static getReviewsForUser(userID) {
     return this._getXForUser("review", "for", userID);
   }
+
   /**
    * Gets Entries from a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
-  getReviewsFromUser(userID) {
+  static getReviewsFromUser(userID) {
     return this._getXForUser("review", "from", userID);
   }
+
   /**
    * Gets Offers from and to a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
-  getOffersForUser(userID) {
+  static getOffersForUser(userID) {
     return Promise.all([this._getXForUser("offer", "createdBy", userID),
-    this._getXForUser("offer", "createdFor", userID)]).then((offers) => {
+      this._getXForUser("offer", "createdFor", userID)
+    ]).then((offers) => {
       return offers.flat();
     });
   }
@@ -140,7 +127,7 @@ class FirebaseIntegration {
    * @param creatorID {string}
    * @returns {Promise<object>}
    */
-  createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, vehicleID, creatorID) {
+  static createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, vehicleID, creatorID) {
     const vehicle = firebase.firestore().collection('vehicle').doc(vehicleID);
     const creator = firebase.firestore().collection('user').doc(creatorID);
     return firebase.firestore().collection('entry').add({
@@ -166,7 +153,7 @@ class FirebaseIntegration {
    * @param maxCargoWeight {number}
    * @return {Promise<object>}
    */
-  createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, maxCargoWidth, maxCargoWeight) {
+  static createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, maxCargoWidth, maxCargoWeight) {
     const owner = firebase.firestore().collection('user').doc(ownerID);
     return firebase.firestore().collection('vehicle').add({
       name,
@@ -188,7 +175,7 @@ class FirebaseIntegration {
    * @param price {number}
    * @returns {Promise<object>}
    */
-  createOffer(driveID, requestID, creatorID, createForID, price) {
+  static createOffer(driveID, requestID, creatorID, createForID, price) {
     const drive = firebase.firestore().collection('entry').doc(driveID);
     const request = firebase.firestore().collection('entry').doc(requestID);
     const creator = firebase.firestore().collection('user').doc(creatorID);
@@ -209,7 +196,7 @@ class FirebaseIntegration {
    * @param review {string}
    * @param stars {number}
    */
-  createReview(reviewedID, reviewerID, review, stars) {
+  static createReview(reviewedID, reviewerID, review, stars) {
     const reviewed = firebase.firestore().collection('user').doc(reviewedID);
     const reviewer = firebase.firestore().collection('user').doc(reviewerID);
     return firebase.firestore().collection('review').add({
@@ -228,12 +215,59 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    * @private
    */
-  _getXForUser(x, userFieldName, userID) {
+  static _getXForUser(x, userFieldName, userID) {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
-      .then((snapshot) => snapshot.docs.map((doc) => {
-        return { id: doc.id, data: doc.data() };
-      })
-      );
+        .then((snapshot) => snapshot.docs.map((doc) => {
+              return {id: doc.id, data: doc.data()};
+            })
+        );
+  }
+
+  static createMessage(name, email, subject, message) {
+   // const messageCreator = firebase.firestore().collection('user').doc(UserID);
+    return firebase.firestore().collection('contactData').add({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message
+    })
+        .then(function () {
+      console.log("Data sent");
+
+    })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+  }
+  static changeUserPassword(newPassword){
+    var user = firebase.auth().currentUser;
+    user.updatePassword(newPassword).then(function() {
+      console.log("Passwrod updated successfully");
+    }).catch(function(error) {
+      console.log(error);
+    });
+  }
+      
+  /**
+   * Internal method for deleting a document of a specific user
+   * @param x <string>
+   * @param collection <string>
+   * @param userFieldName <string>
+   * @param userID <string>
+   * @returns boolean
+   * @private
+   */
+  static deleteXFromUser(x, collection, userFieldName, userID) {
+
+    const userRef = firebase.firestore().collection('user').doc(userID);
+    firebase.firestore().collection(collection).doc(x).delete().then(function () {
+      console.log("Document successfully deleted!");
+      return true;
+    }).catch(function (error) {
+      console.error("Error removing document: ", error);
+      return false;
+    });
   }
 }
