@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:feature" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:feature" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="60011658-ee9c-4ff3-9e3e-d0abe0a29602" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/changePassword.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/changePassword.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/changePassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/changePassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/contact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/firebase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/offer-drive.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/offer-drive.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/offer-drive.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/offer-drive.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/offer-ride.js" beforeDir="false" />
@@ -12,6 +45,14 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,6 +67,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -44,6 +86,16 @@
       <recent name="$PROJECT_DIR$/public/imgs" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/MyCargonaut/public/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -55,6 +107,8 @@
       <option name="presentableId" value="Default" />
       <updated>1592988519002</updated>
       <workItem from="1592988521285" duration="2808000" />
+      <workItem from="1593359468721" duration="7388000" />
+      <workItem from="1593367585260" duration="9404000" />
       <workItem from="1593357225570" duration="19347000" />
     </task>
     <servers />
@@ -62,6 +116,58 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="278" y="46" width="802" height="676" key="#Web_Browsers" timestamp="1593366872199">
+      <screen x="0" y="28" width="1366" height="712" />
+    </state>
+    <state x="278" y="46" width="802" height="676" key="#Web_Browsers/0.28.1366.712@0.28.1366.712" timestamp="1593366872199" />
+    <state x="254" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593369146367">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state x="254" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.860@0.0.1600.860" timestamp="1593369146367" />
+    <state width="1579" height="383" key="GridCell.Tab.0.bottom" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
+    <state width="1579" height="383" key="GridCell.Tab.0.center" timestamp="1593369243001">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1593369243001" />
+    <state width="1579" height="383" key="GridCell.Tab.0.left" timestamp="1593369243001">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1593369243001" />
+    <state width="1579" height="383" key="GridCell.Tab.0.right" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
+    <state width="1579" height="383" key="GridCell.Tab.1.bottom" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.1.bottom/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
+    <state width="1579" height="383" key="GridCell.Tab.1.center" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.1.center/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
+    <state width="1579" height="383" key="GridCell.Tab.1.left" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.1.left/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
+    <state width="1579" height="383" key="GridCell.Tab.1.right" timestamp="1593369243002">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1579" height="383" key="GridCell.Tab.1.right/0.0.1600.860@0.0.1600.860" timestamp="1593369243002" />
   <component name="WindowStateProjectService">
     <state x="693" y="270" width="524" height="500" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1593369988109">
       <screen x="0" y="27" width="1920" height="988" />

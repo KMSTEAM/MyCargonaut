@@ -51,7 +51,7 @@ class FirebaseIntegration {
    */
   static getUserByID(id) {
     return firebase.firestore().collection('user').doc(id).get()
-      .then((doc) => doc.data());
+        .then((doc) => doc.data());
   }
 
   /**
@@ -62,6 +62,7 @@ class FirebaseIntegration {
   static getEntriesForUser(userID) {
     return this._getXForUser("entry", "creator", userID);
   }
+
   /**
    * Gets Vehicles for a user
    * @param userID {string}
@@ -70,6 +71,7 @@ class FirebaseIntegration {
   static getVehiclesForUser(userID) {
     return this._getXForUser("vehicle", "owner", userID);
   }
+
   /**
    * Gets Reviews for a user
    * @param userID {string}
@@ -78,6 +80,7 @@ class FirebaseIntegration {
   static getReviewsForUser(userID) {
     return this._getXForUser("review", "for", userID);
   }
+
   /**
    * Gets Entries from a user
    * @param userID {string}
@@ -86,6 +89,7 @@ class FirebaseIntegration {
   static getReviewsFromUser(userID) {
     return this._getXForUser("review", "from", userID);
   }
+
   /**
    * Gets Offers from and to a user
    * @param userID {string}
@@ -202,6 +206,35 @@ class FirebaseIntegration {
   static _getXForUser(x, userFieldName, userID) {
     const userRef = firebase.firestore().collection('user').doc(userID);
     return firebase.firestore().collection(x).where(userFieldName, "==", userRef).get()
+        .then((snapshot) => snapshot.docs.map((doc) => {
+              return {id: doc.id, data: doc.data()};
+            })
+        );
+  }
+
+  static createMessage(name, email, subject, message) {
+   // const messageCreator = firebase.firestore().collection('user').doc(UserID);
+    return firebase.firestore().collection('contactData').add({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message
+    })
+        .then(function () {
+      console.log("Data sent");
+
+    })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+  }
+  static changeUserPassword(newPassword){
+    var user = firebase.auth().currentUser;
+    user.updatePassword(newPassword).then(function() {
+      console.log("Passwrod updated successfully");
+    }).catch(function(error) {
+      console.log(error);
       .then((snapshot) => snapshot.docs.map((doc) => {
         return {
           id: doc.id,
