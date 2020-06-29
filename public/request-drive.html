@@ -19,9 +19,16 @@
         integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
         integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="js/firebase.js"></script>
+
 </head>
 
-<body onload="loadCargoCategories()">
+<body>
     <div class="docs-container off-canvas off-canvas-sidebar-show">
         <div class="docs-navbar">
             <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
@@ -159,9 +166,7 @@
             </div>
         </div>
     </div>
-
-    <script src="app.js"></script>
-    <script src="request_drive.js"></script>
+    <script src="js/request_drive.js"></script>
 </body>
 
 </html>

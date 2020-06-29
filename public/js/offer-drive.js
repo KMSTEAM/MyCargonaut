@@ -1,5 +1,10 @@
 var vehicles;
 
+window.onload = function(){
+    FirebaseIntegration.checkForRedirect();
+    loadVehicles();
+};
+
 function loadVehicles(){
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -19,7 +24,7 @@ function loadVehicles(){
                 }
             );
         } else {
-            // No user is signed in.
+            // User not logged in
         }
     });
 

@@ -1,3 +1,7 @@
+window.onload = function(){
+    FirebaseIntegration.checkForRedirect();
+};
+
 document.getElementById("send").addEventListener("click", submitForm);
 
 function submitForm() {
