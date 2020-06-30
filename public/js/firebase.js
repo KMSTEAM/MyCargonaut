@@ -49,6 +49,14 @@ class FirebaseIntegration {
   }
 
   /**
+ * Logout Cargonaut user
+ * @returns {Promise<object>}
+ */
+  static logoutUser() {
+    return firebase.auth().signOut();
+  }
+
+  /**
    * Gets an Cargonaut user by id
    * @param id {string}
    * @returns {Promise<{id: string, data: object}>}
@@ -293,8 +301,7 @@ class FirebaseIntegration {
 
   static checkForRedirect(){
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-      } else {
+      if (!user) {
         window.location.href = "index.html";
       }
     });

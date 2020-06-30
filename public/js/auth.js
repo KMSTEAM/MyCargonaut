@@ -1,7 +1,6 @@
 const auth = firebase.auth();
 
-
-
+/* Allow Logging out from current page */
 function sendEmailVerification() {
     firebase.auth().currentUser.sendEmailVerification().then(function () {
         Swal.fire({
@@ -17,6 +16,7 @@ function sendEmailVerification() {
         });
     });
 }
+
 
 
 /**
@@ -47,19 +47,19 @@ singupBtn.addEventListener("click", (e) => {
     });
     
 
-    // auth.createUserWithEmailAndPassword(email, password).then(creds => {
-    //     // creds.user has user account details.
-    //     singupForm.reset();
-    //     sendEmailVerification().then(() => {
-    //         window.location.href = "dash.html";
-    //     })
-    // }, () => {
-    //     Swal.fire({
-    //         icon: 'error',
-    //         title: 'Oops.. Something went wrong!',
-    //         text: 'Make sure you filled up all fields correctly!'
-    //     });
-    // })
+    auth.createUserWithEmailAndPassword(email, password).then(creds => {
+        // creds.user has user account details.
+        singupForm.reset();
+        sendEmailVerification().then(() => {
+            window.location.href = "dash.html";
+        })
+    }, () => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops.. Something went wrong!',
+            text: 'Make sure you filled up all fields correctly!'
+        });
+    })
 })
 
 const loginForm = document.querySelector('#loginForm');
@@ -128,16 +128,6 @@ function sendPasswordReset() {
         }
     });
 }
-
-
-const logoutBtn = document.getElementById("logout-btn");
-
-logoutBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    auth.signOut().then(() => {
-        window.location.href = "index.html";
-    })
-})
 
 
 /**
