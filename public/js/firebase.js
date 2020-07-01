@@ -151,6 +151,28 @@ class FirebaseIntegration {
   }
 
   /**
+   * List all futures Drives
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getDrivesList() {
+    return firebase.firestore().collection(x).where('departureTime', ">", new Date()).get()
+    .then((snapshot) => snapshot.docs.map((doc) => {
+      return {id: doc.id, data: doc.data()};
+    }));
+  }
+
+  /**
+   * List all open offers of the User
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getAllMyOpenOffers(userID) {
+    return this.getOffersForUser(userID)
+    .then((offers) => offers.filter((offer) => {
+      return !['rejected', 'paid'].includes(offer.data.state);
+    }));
+  }
+
+  /**
    * Create a new cargonaut entry
    * @param type {string} - Possible values: drive, driveRequest
    * @param fromCity {string}
@@ -223,11 +245,13 @@ class FirebaseIntegration {
     const request = firebase.firestore().collection(this.testify('entry')).doc(requestID);
     const creator = firebase.firestore().collection(this.testify('user')).doc(creatorID);
     const createdFor = firebase.firestore().collection(this.testify('user')).doc(createForID);
+    const state = 'created';
     return firebase.firestore().collection(this.testify('offer')).add({
       drive,
       request,
       creator,
       createdFor,
+      state,
       price,
     });
   }
@@ -248,6 +272,16 @@ class FirebaseIntegration {
       review,
       stars,
     });
+  }
+
+  /**
+   * Updates an offers state
+   * @param offerID {string}
+   * @param newState {string}
+   */
+  static updateOfferState(offerID, newState) {
+    return firebase.firestore().collection(this.testify('offer')).doc(offerID)
+        .set({state: newState});
   }
 
   /**
