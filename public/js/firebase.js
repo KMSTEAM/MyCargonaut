@@ -281,7 +281,38 @@ class FirebaseIntegration {
    */
   static updateOfferState(offerID, newState) {
     return firebase.firestore().collection(this.testify('offer')).doc(offerID)
-        .set({state: newState});
+        .update({state: newState});
+  }
+
+  /**
+   * @param userID
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static matchRequestAndDrives(userID) {
+    const creator = firebase.firestore().collection(this.testify('user')).doc(userID);
+    return firebase.firestore().collection(this.testify('entry'))
+      .where('type', '==', 'driveRequest')
+      .where('creator', '==', creator)
+      .where('departureTime', '>', new Date())
+      .get().then((requests) => {
+      return Promise.all(requests.docs.map((request) => {
+        const {fromCity, toCity} = request.data();
+        console.log(fromCity, toCity);
+        return firebase.firestore()
+          .collection(this.testify('entry'))
+          .where('type', '==', 'drive')
+          .where('departureTime', '>', new Date())
+          .where('fromCity', '==', fromCity)
+          .where('toCity', '==', toCity)
+          .get();
+      })).then((driveRefs) => {
+        return driveRefs.flat().map((driveRef) => {
+          return driveRef.docs.map((drive) => {
+            return {id: drive.id, data: drive.data()};
+          });
+        }).flat();
+      });
+    });
   }
 
   /**
@@ -312,14 +343,13 @@ class FirebaseIntegration {
   static _getXById(x, id) {
     x = this.testify(x);
     const ref = firebase.firestore().collection(x).doc(id);
-    ref
-    .get()
-    .then((doc) => {
-      if (!doc.data()) {
-        return undefined;
-      }
-      return {id: doc.id, data: doc.data()};
-    });
+    return ref.get()
+      .then((doc) => {
+        if (!doc.data()) {
+          return undefined;
+        }
+        return {id: doc.id, data: doc.data()};
+      });
   }
 
   static createMessage(name, email, subject, message) {
