@@ -158,11 +158,12 @@ class FirebaseIntegration {
    * @param departureTime {Date}
    * @param arrivalTime {Date}
    * @param price {number}
+   * @param description {string}
    * @param vehicleID {string}
    * @param creatorID {string}
    * @returns {Promise<object>}
    */
-  static createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, vehicleID, creatorID) {
+  static createEntry(type, fromCity, toCity, departureTime, arrivalTime, price, description, vehicleID, creatorID) {
     const vehicle = firebase.firestore().collection(this.testify('vehicle')).doc(vehicleID);
     const creator = firebase.firestore().collection(this.testify('user')).doc(creatorID);
     return firebase.firestore().collection(this.testify('entry')).add({
@@ -172,6 +173,7 @@ class FirebaseIntegration {
       departureTime,
       arrivalTime,
       price,
+      description,
       vehicle,
       creator,
     });
@@ -182,18 +184,20 @@ class FirebaseIntegration {
    * @param name {string}
    * @param ownerID {string}
    * @param type {string}
+   * @param description {string}
    * @param maxCargoDepth {number}
    * @param maxCargoHeight {number}
    * @param maxCargoWidth {number}
    * @param maxCargoWeight {number}
    * @return {Promise<object>}
    */
-  static createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, maxCargoWidth, maxCargoWeight) {
+  static createVehicle(name, ownerID, type, maxCargoDepth, maxCargoHeight, description, maxCargoWidth, maxCargoWeight) {
     const owner = firebase.firestore().collection(this.testify('user')).doc(ownerID);
     return firebase.firestore().collection(this.testify('vehicle')).add({
       name,
       owner,
       type,
+      description,
       maxCargoDepth,
       maxCargoHeight,
       maxCargoWidth,
