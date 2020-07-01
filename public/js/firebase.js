@@ -37,7 +37,6 @@ class FirebaseIntegration {
           const docRef = firebase.firestore().
               collection(this.testify('user')).
               doc(_user.uid);
-          console.log(docRef);
           return docRef.set({
             username,
             birthDate,
@@ -340,7 +339,6 @@ class FirebaseIntegration {
         then((requests) => {
           return Promise.all(requests.docs.map((request) => {
             const {fromCity, toCity} = request.data();
-            console.log(fromCity, toCity);
             return firebase.firestore().
                 collection(this.testify('entry')).
                 where('type', '==', 'drive').
