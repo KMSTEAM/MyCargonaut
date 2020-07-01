@@ -62,15 +62,43 @@ class FirebaseIntegration {
    * @returns {Promise<{id: string, data: object}>}
    */
   static getUserByID(id) {
-    const docRef = firebase.firestore().collection(this.testify('user')).doc(id);
-    console.log(docRef);
-    return docRef.get()
-      .then((doc) => {
-        if (!doc.data()) {
-          return undefined;
-        }
-        return {id: doc.id, data: doc.data()};
-      });
+    return this._getXById("user", id);
+  }
+
+  /**
+   * Gets an Cargonaut entry by id
+   * @param id {string}
+   * @returns {Promise<{id: string, data: object}>}
+   */
+  static getEntryByID(id) {
+    return this._getXById("entry", id);
+  }
+
+  /**
+   * Gets an Cargonaut offer by id
+   * @param id {string}
+   * @returns {Promise<{id: string, data: object}>}
+   */
+  static getOfferByID(id) {
+    return this._getXById("offer", id);
+  }
+
+  /**
+   * Gets an Cargonaut review by id
+   * @param id {string}
+   * @returns {Promise<{id: string, data: object}>}
+   */
+  static getReviewByID(id) {
+    return this._getXById("review", id);
+  }
+
+  /**
+   * Gets an Cargonaut vehicle by id
+   * @param id {string}
+   * @returns {Promise<{id: string, data: object}>}
+   */
+  static getVehicleById(id) {
+    return this._getXById("vehicle", id);
   }
 
   /**
@@ -230,6 +258,26 @@ class FirebaseIntegration {
               return {id: doc.id, data: doc.data()};
             })
         );
+  }
+
+  /**
+   * Internal method to get an firebase object by id
+   * @param x <string>
+   * @param id <string>
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   * @private
+   */
+  static _getXById(x, id) {
+    x = this.testify(x);
+    const ref = firebase.firestore().collection(x).doc(id);
+    ref
+    .get()
+    .then((doc) => {
+      if (!doc.data()) {
+        return undefined;
+      }
+      return {id: doc.id, data: doc.data()};
+    });
   }
 
   static createMessage(name, email, subject, message) {
