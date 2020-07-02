@@ -22,7 +22,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
-            integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+        integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script src="/__/firebase/7.15.4/firebase-app.js"></script>
@@ -31,6 +31,17 @@
     <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
     <script src="/__/firebase/init.js"></script>
     <script src="js/firebase.js"></script>
+    <style>
+        .docs-content .panel {
+            height: auto;
+            max-height: 75vh;
+        }
+
+        .panel {
+            height: auto;
+            max-height: 75vh;
+        }
+    </style>
 </head>
 
 <body>
@@ -103,23 +114,46 @@
             <div class="docs-content" id="content">
                 <div class="container">
                     <h3 class="s-title">Your Dashboard</h3>
-                    <p>Hello <text id="user-display-name"></text>! Here you can see all activities on our platform</p>
-                    <div class="columns">
-                        <div class="column col-lg-12">
+                    <span class="text-left">
+                    <p id="welcome"></p>
+                    </span>
+                    <div>
+                        <h3 class="s-title">Matches</h3>
+                        <div id="matches" class="docs-demo columns">
                         </div>
-
+                        <h3 class="s-title">Your Open Offers</h3>
+                        <div id="openOffers" class="docs-demo columns">
+                        </div>
+                        <h3 class="s-title">Your Requests</h3>
+                        <div id="openRequests" class="docs-demo columns">
+                        </div>
+                        <div class="docs-footer container grid-lg" id="copyright">
+                            <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span>
+                                by <a href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="docs-footer container grid-lg" id="copyright">
-                    <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span> by <a
-                            href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/dash.js"></script>
+                    <!-- Contact Details Modal / add active to open-->
+                    <div class="modal modal-sm" id="panelDetails">
+                        <a href="#close" class="modal-overlay" aria-label="Close"></a>
+                        <div class="modal-container">
+                            <div class="modal-header">
+                                <a href="#close" class="btn btn-clear float-right" aria-label="Close"></a>
+                                <div class="modal-title h5">Contact Details</div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="content">
+                                    <!-- content here -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" href="#close">OK!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="js/auth.js"></script>
+                    <script src="js/dash.js"></script>
 </body>
 
 </html>

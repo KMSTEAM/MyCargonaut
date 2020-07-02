@@ -162,6 +162,21 @@ class FirebaseIntegration {
   }
 
   /**
+ * Gets Requests from a user
+ * @param userID {string}
+ * @returns {Promise<Array<{id: string, data: object}>>}
+ */
+  static getRequestsForUser(userID) {
+    return Promise.all([
+      this._getXForUser('entry', 'creator', userID)
+    ]).then((entries) => {
+      const requests = entries[0].filter(entry => entry.data.type == 'driveRequest');
+      console.log(requests);
+      return requests;
+    });
+  }
+
+  /**
    * List all futures Drives
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
