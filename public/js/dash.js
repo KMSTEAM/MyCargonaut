@@ -62,23 +62,23 @@ const DisplayName = function (user) {
             return user.email;
         }
     }
-}
+};
 
 function setUsername(nameOrEmail) {
     username = nameOrEmail;
-}
+};
 
 function getUsername() {
     return this.username;
-}
+};
 
 function setVehicle(vehicleObject) {
     vehicle = vehicleObject;
-}
+};
 
 function getVehicle() {
     return this.vehicle;
-}
+};
 
 async function setMatch(data) {
     var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
@@ -92,7 +92,7 @@ async function setMatch(data) {
     });
     creator = getUsername();
     await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
-        const vcl = v.data.name + ' [' + v.data.type + ']';;
+        const vcl = v.data.name + ' [' + v.data.type + ']';
         return setVehicle(vcl);
     });
     vehicle = getVehicle();
@@ -109,7 +109,7 @@ async function setMatch(data) {
         vehicle: vehicle,
         type: type
     };
-}
+};
 
 async function setDrive(data) {
     var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
@@ -129,14 +129,14 @@ async function setDrive(data) {
         fromCity: data.fromCity,
         toCity: data.toCity,
     };
-}
+};
 
 function getMatch() {
     return this.match;
-}
+};
 function getDrive() {
     return this.drive;
-}
+};
 
 async function setRequest(data) {
     var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
@@ -149,14 +149,14 @@ async function setRequest(data) {
     creator = getUsername();
     await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
         if (v) {
-            const vcl = v.data.name + ' [' + v.data.type + ']';;
+            const vcl = v.data.name + ' [' + v.data.type + ']';
             return setVehicle(vcl);
-        }
+        };
     });
     vehicle = getVehicle();
     if (!vehicle) {
         vehicle = 'Not Available';
-    }
+    };
     request = {
         fromCity: data.fromCity,
         toCity: data.toCity,
@@ -164,11 +164,11 @@ async function setRequest(data) {
         depatureTime: depatureTime,
         vehicle: vehicle
     };
-}
+};
 
 function getRequest() {
     return this.request;
-}
+};
 
 async function setOffer(data, request) {
     var creator = '';
@@ -224,12 +224,12 @@ async function renderOffers(offers) {
             var vehicle = offer.vehicle;
             if (!vehicle) {
                 vehicle = 'Not Available';
-            }
-            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.depatureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div > "
-        }
+            };
+            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.depatureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div>";
+        };
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
-    }
+    };
     document.getElementById("openOffers").innerHTML = offerCardHtml;
 }
 
@@ -257,7 +257,7 @@ async function renderMatches(matches) {
             var data = matches[i].data;
             await setMatch(data);
             match = getMatch();
-            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.depatureTime + " <br>" + match.arrivalTime + " <br>" + match.creator + " <br>" + match.vehicle + "<br>" + match.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>"
+            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.depatureTime + " <br>" + match.arrivalTime + " <br>" + match.creator + " <br>" + match.vehicle + "<br>" + match.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>";
         }
     } else {
         matchCardHtml = "<tr><td colspan=\"5\">Sorry, we couldn't find any match!</td></tr>";
@@ -334,10 +334,10 @@ function renderAllMyRequestsAndOffers() {
                             // exec after query
                             if (entries[i].data.type == "driveRequest") {
                                 // render drive request panel
-                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + getUsername() + " <br>" + getVehicle() + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>"
+                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + getUsername() + " <br>" + getVehicle() + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>";
                             } else {
                                 // render drive offer panel
-                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Arrival: <br>Creator: <br>Price: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + entries[i].data.arrivalTime + " <br>" + getUsername() + " <br>" + entries[i].data.suggestedPrice + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div > "
+                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Arrival: <br>Creator: <br>Price: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + entries[i].data.arrivalTime + " <br>" + getUsername() + " <br>" + entries[i].data.suggestedPrice + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div>";
                             }
                         }
                     } else {

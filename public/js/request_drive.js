@@ -7,7 +7,8 @@ const addCargo_btn = document.getElementById('addCargo');
 addCargo_btn.addEventListener('click', function (e) {
     e.preventDefault();
     addCargo();
-})
+});
+
 function addCargo(){
     let cargoHTML = `<div class=\"form-group\"><div class=\"input-group col-12\"> 
                          <span class=\"input-group-addon bg-primary col-2\">#${cargoCounter}</span>
@@ -37,7 +38,7 @@ const request_btn = document.getElementById('requestDrive');
 request_btn.addEventListener('click', function (e) {
     e.preventDefault();
     requestDrive();
-})
+});
 function requestDrive(){
 
     firebase.auth().onAuthStateChanged(function(user) {
