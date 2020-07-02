@@ -143,13 +143,13 @@ async function setRequest(data) {
         const username = DisplayName(user);
         return setUsername(username);
     });
+    creator = getUsername();
     await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
         if (v) {
             const vcl = v.data.name + ' [' + v.data.type + ']';;
             return setVehicle(vcl);
         }
     });
-    creator = getUsername();
     vehicle = getVehicle();
     request = {
         fromCity: data.fromCity,
