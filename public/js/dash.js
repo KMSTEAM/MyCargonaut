@@ -81,21 +81,24 @@ function getVehicle() {
 }
 
 async function setMatch(data) {
-    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0,5);
-    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0,5);
-    var type = data.type.substring(0,1).toUpperCase() + data.type.substring(1);
+    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0, 5);
+    var type = data.type.substring(0, 1).toUpperCase() + data.type.substring(1);
     var creator = '';
     var vehicle = '';
-    await FirebaseIntegration.getUserByID(data.creator.id).then( user => {
+    await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
         return setUsername(username);
     });
-    await FirebaseIntegration.getVehicleById(data.vehicle.id).then( v => {
+    creator = getUsername();
+    await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
         const vcl = v.data.name + ' [' + v.data.type + ']';;
         return setVehicle(vcl);
     });
-    creator = getUsername();
     vehicle = getVehicle();
+    if (!vehicle) {
+        vehicle = 'Not Available';
+    }
     match = {
         fromCity: data.fromCity,
         toCity: data.toCity,
@@ -109,10 +112,10 @@ async function setMatch(data) {
 }
 
 async function setDrive(data) {
-    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0,5);
-    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0,5);
+    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0, 5);
     var creator = '';
-    await FirebaseIntegration.getUserByID(data.creator.id).then( user => {
+    await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
         return setUsername(username);
     });
@@ -151,6 +154,9 @@ async function setRequest(data) {
         }
     });
     vehicle = getVehicle();
+    if (!vehicle) {
+        vehicle = 'Not Available';
+    }
     request = {
         fromCity: data.fromCity,
         toCity: data.toCity,
@@ -215,7 +221,11 @@ async function renderOffers(offers) {
             request = getRequest();
             await setOffer(data, request);
             offer = getOffer();
-            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Deputure\:  <br>Creator: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.depatureTime + " <br>" + offer.createdBy + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div > "
+            var vehicle = offer.vehicle;
+            if (!vehicle) {
+                vehicle = 'Not Available';
+            }
+            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.depatureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-center\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div > "
         }
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
