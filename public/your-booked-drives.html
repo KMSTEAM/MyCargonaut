@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MyCargonaut - Your drives</title>
+    <title>MyCargonaut - Your booked drives</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
         integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css"
@@ -90,8 +90,8 @@
         <div class="off-canvas-content">
             <div class="docs-content" id="content">
                 <div class="container">
-                    <h3 class="s-title">Your drives</h3>
-                    <p>Here you can look at your drives history and search it</p>
+                    <h3 class="s-title">Your booked drives</h3>
+                    <p>Here you can look at your booked drives and write reviews</p>
                     <div class="columns">
                         <div class="column col-12">
                             <table class="table table-scroll table-striped table-hover">
@@ -100,12 +100,13 @@
                                         <th>Date</th>
                                         <th>From</th>
                                         <th>To</th>
-                                        <th>Vehicle</th>
                                         <th>Price</th>
+                                        <th>State</th>
+
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody id="drivesList">
+                                <tbody id="offersList">
                                 </tbody>
                             </table>
                         </div>
@@ -126,7 +127,7 @@
     <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
     <script src="/__/firebase/init.js"></script>
     <script src="js/firebase.js"></script>
-    <script src="js/your-drives.js"></script>
+    <script src="js/your-booked-drives.js"></script>
 
 </body>
 
