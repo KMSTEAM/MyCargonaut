@@ -4,7 +4,6 @@ window.onload = function () {
 };
 
 function loadOffers() {
-    //FirebaseIntegration.loginUser("seckeichhorn@gmail.com", "cargonaut")
 
     console.log("load");
 
