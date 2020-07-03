@@ -171,7 +171,6 @@ class FirebaseIntegration {
       this._getXForUser('entry', 'creator', userID)
     ]).then((entries) => {
       const requests = entries[0].filter(entry => entry.data.type == 'driveRequest');
-      console.log(requests);
       return requests;
     });
   }

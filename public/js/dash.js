@@ -1,7 +1,11 @@
 var currentUser;
 var username = '';
 var vehicle = '';
+var offersList = [];
+var matchesList = [];
+var requestsList = [];
 var offer = {
+    id: undefined,
     createdBy: undefined,
     createdFor: undefined,
     request: undefined,
@@ -11,6 +15,7 @@ var offer = {
     toCity: undefined,
 };
 var drive = {
+    id: undefined,
     type: 'drive',
     creator: undefined,
     arrivalTime: undefined,
@@ -21,14 +26,16 @@ var drive = {
     toCity: undefined,
 };
 var request = {
+    id: undefined,
     type: 'driveRequest',
     fromCity: undefined,
     toCity: undefined,
     creator: undefined,
-    depatureTime: undefined,
+    departureTime: undefined,
     vehicle: undefined
 };
 var match = {
+    id: undefined,
     arrivalTime: undefined,
     departureTime: undefined,
     creator: undefined,
@@ -45,65 +52,62 @@ window.onload = function (e) {
             currentUser = user;
             username += DisplayName(currentUser);
             document.getElementById('welcome').innerText = 'Hello ' + username + '! Here you can see all activities on our platform';
+            const logoutBtn = document.getElementById("logout-btn");
+            /* Allow Logging out from current page */
+            logoutBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                firebase.auth().onAuthStateChanged(function (user) {
+                    if (user) {
+                        FirebaseIntegration.logoutUser().then(() => {
+                            window.location.href = "index.html";
+                        }).catch(function (error) {
+                            handleErrors(error);
+                        });
+                    }
+                });
+            });
+            loadToMeOfferedDrives();
+            loadMyRequests();
+            loadMyMatches();
         }
     });
-    loadToMeOfferedDrives();
-    loadMyRequests();
-    loadMyMatches();
 };
 
-const DisplayName = function (user) {
-    if (user.data) {
-        return user.data.username;
-    } else {
-        if (user.displayName) {
-            return user.displayName;
-        } else {
-            return user.email;
-        }
-    }
-};
 
-function setUsername(nameOrEmail) {
-    username = nameOrEmail;
-};
+async function setMatch(match) {
+    var data = match.data;
+    if (!data) {
+        // document is snapshot, start reading directly
+        data = match;
+    };
 
-function getUsername() {
-    return this.username;
-};
-
-function setVehicle(vehicleObject) {
-    vehicle = vehicleObject;
-};
-
-function getVehicle() {
-    return this.vehicle;
-};
-
-async function setMatch(data) {
-    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
-    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0, 5);
+    var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
+    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    var arrivalTime = new Date(data.arrivalTime * 1000).toDateString().substring(0, 9);
+    arrivalTime += ', ' + new Date(data.arrivalTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
     var type = data.type.substring(0, 1).toUpperCase() + data.type.substring(1);
-    var creator = '';
-    var vehicle = '';
-    await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
-        const username = DisplayName(user);
-        return setUsername(username);
-    });
-    creator = getUsername();
-    await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
-        const vcl = v.data.name + ' [' + v.data.type + ']';
-        return setVehicle(vcl);
-    });
-    vehicle = getVehicle();
-    if (!vehicle) {
-        vehicle = 'Not Available';
+
+    var creator = {
+        id: data.creator.id,
+        name: await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
+            const username = DisplayName(user);
+            return username;
+        })
+    };
+    var vehicle = 'Not Available';
+    if (data.vehicle) {
+        vehicle = await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
+            const vcl = v.data.name + ' [' + v.data.type + ']';
+            return vcl;
+        });
     }
-    match = {
+
+    return match = {
+        id: match.id,
         fromCity: data.fromCity,
         toCity: data.toCity,
         creator: creator,
-        depatureTime: depatureTime,
+        departureTime: departureTime,
         arrivalTime: arrivalTime,
         price: data.price,
         vehicle: vehicle,
@@ -111,121 +115,117 @@ async function setMatch(data) {
     };
 };
 
-async function setDrive(data) {
-    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
-    var arrivalTime = new Date(data.arrivalTime).toTimeString().substring(0, 5);
-    var creator = '';
-    await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
+async function setDrive(drive) {
+    var data = drive.data;
+    if (!data) {
+        // document is snapshot, start reading directly
+        data = drive;
+    };
+
+    var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
+    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    var arrivalTime = new Date(data.arrivalTime * 1000).toDateString().substring(0, 9);
+    arrivalTime += ', ' + new Date(data.arrivalTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    
+    var creator = await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
-        return setUsername(username);
+        return username;
     });
-    creator = getUsername();
-    drive = {
+
+    return drive = {
+        id: drive.id,
         type: 'drive',
         creator: creator,
         arrivalTime: arrivalTime,
-        departureTime: depatureTime,
+        departureTime: departureTime,
         price: data.price,
         fromCity: data.fromCity,
         toCity: data.toCity,
     };
 };
 
-function getMatch() {
-    return this.match;
-};
-function getDrive() {
-    return this.drive;
-};
-
-async function setRequest(data) {
-    var depatureTime = new Date(data.depatureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
-    var creator = '';
-    var vehicle = '';
-    await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
+async function setRequest(request) {
+    var data = request.data;
+    if (!data) {
+        // document is snapshot, start reading directly
+        data = request;
+    };
+    var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
+    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    var creator = await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
-        return setUsername(username);
+        return username;
     });
-    creator = getUsername();
-    await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
+    var vehicle = await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
         if (v) {
             const vcl = v.data.name + ' [' + v.data.type + ']';
-            return setVehicle(vcl);
+            return vcl;
         };
     });
-    vehicle = getVehicle();
     if (!vehicle) {
         vehicle = 'Not Available';
     };
-    request = {
+    return request = {
+        id: request.id,
         fromCity: data.fromCity,
         toCity: data.toCity,
         creator: creator,
-        depatureTime: depatureTime,
+        departureTime: departureTime,
         vehicle: vehicle
     };
 };
 
-function getRequest() {
-    return this.request;
-};
-
-async function setOffer(data, request) {
-    var creator = '';
-    var drive = '';
-    await FirebaseIntegration.getUserByID(data.createdBy.id).then(user => {
+async function setOffer(offer, request) {
+    var data = offer.data;
+    if (!data) {
+        // document is snapshot, start reading directly
+        data = offer;
+    };
+    var creator = await FirebaseIntegration.getUserByID(data.createdBy.id).then(user => {
         const username = DisplayName(user);
-        return setUsername(username);
+        return username;
     });
-    await FirebaseIntegration._getXById('entry', data.drive.id).then(drive => {
+    var drive = await FirebaseIntegration._getXById('entry', data.drive.id).then(drive => {
         if (drive) {
             const drv = drive.data;
             return setDrive(drv);
         }
     });
-    creator = getUsername();
-    drive = getDrive();
-    offer = {
+    var fromCity = '';
+    var toCity = '';
+    if (!data.fromCity || !data.toCity) {
+        fromCity = drive.fromCity;
+        toCity = drive.toCity;
+    }
+    return offer = {
+        id: offer.id,
         createdBy: creator,
         createdFor: DisplayName(currentUser),
         request: request,
         price: data.price,
         drive: drive,
-        fromCity: data.fromCity,
-        toCity: data.toCity,
+        fromCity: fromCity,
+        toCity: toCity,
     };
-}
-
-function getOffer() {
-    return this.offer;
-}
-
-function checkProperties(obj) {
-    for (var key in obj) {
-        if (!obj[key]) {
-            obj[key] = "NA";
-        }
-    }
 }
 
 async function renderOffers(offers) {
     var offerCardHtml = '';
     if (offers && offers.length > 0) {
         for (let i = 0; i < offers.length; i++) {
-            var data = offers[i].data;
-            await firebase.firestore().collection('entry').doc(data.request.id).get()
+            var request = await firebase.firestore().collection('entry').doc(offers[i].data.request.id).get()
                 .then(async sh => {
                     const req = sh.data();
+                    req.id = sh.id;
                     return setRequest(req);
                 });
-            request = getRequest();
-            await setOffer(data, request);
-            offer = getOffer();
+            offer = await setOffer(offers[i], request);
+            offersList.push(offer);
             var vehicle = offer.vehicle;
             if (!vehicle) {
                 vehicle = 'Not Available';
             };
-            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.depatureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" style=\"margin-right: 10px;\" href=\"#panelDetails\">Accept</button><button class=\"btn btn-default\" href=\"#panelDetails\">Reject</button></div ></div ></div ></div>";
+            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
         };
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
@@ -237,10 +237,9 @@ async function renderRequests(requests) {
     var requestCardHtml = '';
     if (requests && requests.length > 0) {
         for (let i = 0; i < requests.length; i++) {
-            var data = requests[i].data;
-            await setRequest(data);
-            request = getRequest();
-            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column text-center\">" + request.depatureTime + " <br>" + request.creator + " <br>" + request.vehicle + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>"
+            request = await setRequest(requests[i]);
+            requestsList.push(request);
+            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column text-center\">" + request.departureTime + " <br>" + request.creator + " <br>" + request.vehicle + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>"
         }
     } else {
         requestCardHtml = "<tr><td colspan=\"5\">You don't have any requests yet</td></tr>";
@@ -250,21 +249,17 @@ async function renderRequests(requests) {
 
 async function renderMatches(matches) {
     var matchCardHtml = '';
-    console.log("matches: ");
-    console.log(matches);
     if (matches && matches.length > 0) {
         for (let i = 0; i < matches.length; i++) {
-            var data = matches[i].data;
-            await setMatch(data);
-            match = getMatch();
-            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.depatureTime + " <br>" + match.arrivalTime + " <br>" + match.creator + " <br>" + match.vehicle + "<br>" + match.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>";
+            match = await setMatch(matches[i]);
+            matchesList.push(match);
+            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime + " <br>" + match.arrivalTime + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"getInTouch(event,'"+ match.creator.id +"')\">Get in Touch!</button></div></div></div></div>";
         }
     } else {
         matchCardHtml = "<tr><td colspan=\"5\">Sorry, we couldn't find any match!</td></tr>";
     }
     document.getElementById("matches").innerHTML = matchCardHtml;
 }
-
 
 function loadMyRequests() {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -279,7 +274,6 @@ function loadMyRequests() {
     });
 }
 
-
 function loadMyMatches() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -292,7 +286,6 @@ function loadMyMatches() {
         }
     });
 }
-
 
 function loadToMeOfferedDrives() {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -307,68 +300,74 @@ function loadToMeOfferedDrives() {
     });
 }
 
-function renderAllMyRequestsAndOffers() {
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            console.log("user");
-            FirebaseIntegration.getEntriesForUser(user.uid).then(
-                async (entries) => {
-                    let i;
-                    let entriesListHtml = '';
-                    if (entries.length > 0) {
-                        for (i = 0; i < entries.length; i++) {
-                            await firebase.firestore().collection('vehicle').doc(entries[i].data.vehicle.id).get()
-                                .then(async vehicleDocSnapShot => {
-                                    if (vehicleDocSnapShot.exists) {
-                                        const name = vehicleDocSnapShot.data().name;
-                                        console.log(name);
-                                        return setVehicle(name);
-                                    }
-                                });
-                            await firebase.firestore().collection('user').doc(entries[i].data.creator.id).get()
-                                .then(async userDocSnapShot => {
-                                    const username = userDocSnapShot.data().username;
-                                    console.log(username);
-                                    return setUsername(username);
-                                });
-                            // exec after query
-                            if (entries[i].data.type == "driveRequest") {
-                                // render drive request panel
-                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + getUsername() + " <br>" + getVehicle() + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div></div></div></div>";
-                            } else {
-                                // render drive offer panel
-                                entriesListHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + entries[i].data.fromCity + " to " + entries[i].data.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Arrival: <br>Creator: <br>Price: <br></div><div class=\"column col-3 text-center\">" + entries[i].data.depatureTime + " <br>" + entries[i].data.arrivalTime + " <br>" + getUsername() + " <br>" + entries[i].data.suggestedPrice + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" href=\"#panelDetails\">Get in Touch!</button></div ></div ></div ></div>";
-                            }
-                        }
-                    } else {
-                        entriesListHtml += "<tr><td colspan=\"5\">You don't have any request or offers yet</td></tr>";
-                    }
-                    document.getElementById("openRequests").innerHTML = entriesListHtml;
-                }
-            );
-        }
-    });
+async function rejectOffer(e, offerId){
+    e.preventDefault();
+    await FirebaseIntegration.updateOfferState(offerId, 'rejected')
+        .then(() => {
+            e.target.parentElement.className = 'panel-footer text-center';
+            e.target.parentElement.innerHTML = '<div class="bg-error">Rejected</div>';
+            var msg = 'Offer Rejected'
+            alertDone(msg);
+        }, error => {
+            handleErrors(error);
+        });
 }
 
-
-const logoutBtn = document.getElementById("logout-btn");
-/* Allow Logging out from current page */
-logoutBtn.addEventListener("click", (e) => {
+async function acceptOffer(e, offerId){
     e.preventDefault();
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            FirebaseIntegration.logoutUser().then(() => {
-                window.location.href = "index.html";
-                console.log("loggedout user: " + user.uid);
-            }).catch(function (error) {
-                handleErrors(error);
-            });
+    await FirebaseIntegration.updateOfferState(offerId, 'accepted')
+        .then(() => {
+            e.target.parentElement.className = 'panel-footer text-center';
+            e.target.parentElement.innerHTML = '<div class="bg-success">Accepted</div>';
+            var msg = 'Offer Accepted'
+            alertDone(msg);
+        }, error => {
+            handleErrors(error);
+        });
+}
+
+async function editRequest(e, user) {
+    e.preventDefault();
+    // TO-DO: fire swal input modal with request data to modify it
+    const { value: formValues } = await Swal.fire({
+        title: 'Send a Message!',
+        html: '<div id="swal2-content" class="swal2-html-container" style="display: block;"><div class="input-group col-12"><span class="input-group-addon addon-lg col-4 bg-primary">Your Email: </span><input type="text" id="email" placeholder="user@example.com" class="form-input input-lg col-5"></div><textarea id="msg" placeholder="Write your message here" rows="3" class="form-input input-lg col-xs-12" style="margin-top: 20px; width: 628px; height: 84px;"></textarea></div>',
+        focusConfirm: false,
+        confirmButtonText: 'Send Message',
+        preConfirm: () => {
+            return [
+                document.getElementById('email').value,
+                document.getElementById('msg').value
+            ]
         }
-    });
-});
+    })
+    // TO-DO: update request
+    if (formValues) {
+        Swal.fire(JSON.stringify(formValues))
+    }
+}
+
+async function getInTouch(e, user){
+    e.preventDefault();
+    const { value: formValues } = await Swal.fire({
+        title: 'Send a Message!',
+        html: '<div id="swal2-content" class="swal2-html-container" style="display: block;"><div class="input-group col-12"><span class="input-group-addon addon-lg col-4 bg-primary">Your Email: </span><input type="text" id="email" placeholder="user@example.com" class="form-input input-lg col-5"></div><textarea id="msg" placeholder="Write your message here" rows="3" class="form-input input-lg col-xs-12" style="margin-top: 20px; width: 628px; height: 84px;"></textarea></div>',
+        focusConfirm: false,
+        confirmButtonText: 'Send Message',
+        preConfirm: () => {
+            return [
+                document.getElementById('email').value,
+                document.getElementById('msg').value
+            ]
+        }
+    })
+    // TO-DO: sent email to user with write-back adress and msg
+    if (formValues) {
+        Swal.fire(JSON.stringify(formValues))
+    }
+}
 
 function handleErrors(error) {
-    // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     Swal.fire({
@@ -378,3 +377,25 @@ function handleErrors(error) {
         footer: 'Error Code: ' + errorCode
     });
 }
+
+function alertDone(msg){
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: msg,
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+const DisplayName = function (user) {
+    if (user.data) {
+        return user.data.username;
+    } else {
+        if (user.displayName) {
+            return user.displayName;
+        } else {
+            return user.email;
+        }
+    }
+};
