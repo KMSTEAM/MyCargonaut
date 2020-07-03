@@ -9,29 +9,52 @@ addCargo_btn.addEventListener('click', function (e) {
     addCargo();
 });
 
+document.getElementById('More_Requests_Button').addEventListener('click',function (e) {
+    e.preventDefault();
+    loadInputForms();
+});
+
 function addCargo(){
-    let cargoHTML = `<div class=\"form-group\"><div class=\"input-group col-12\"> 
-                         <span class=\"input-group-addon bg-primary col-2\">#${cargoCounter}</span>
-                         <input id=\"descr${cargoCounter}\" type=\"text\" class=\"form-input\" placeholder=\"Description\">
-                       </div>
-                       <div class=\"input-group col-12\">
-                         <span class=\"input-group-addon col-2\">Weight</span>
-                         <input id=\"weight${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1kg\">
-                         <span class=\"input-group-addon col-2\">Height</span>
-                         <input id=\"height${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
-                       </div>
-                       <div class=\"input-group col-12\">
-                         <span id=\"depth${cargoCounter}\" class=\"input-group-addon col-2\">Depth</span>
-                         <input type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
-                         <span class=\"input-group-addon col-2\">Width</span>
-                         <input id=\"width${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
-                       </div>
-                       </div>`;
+    let cargoHTML = `<div class=\"form-group\">
+                        <div class=\"input-group col-12\"> 
+                           <span class=\"input-group-addon bg-primary col-2\">#${cargoCounter}</span>
+                           <input id=\"descr${cargoCounter}\" type=\"text\" class=\"form-input\" placeholder=\"Description\">
+                        </div>
+                        <div class=\"input-group col-12\">
+                          <span class=\"input-group-addon col-2\">Weight</span>
+                          <input id=\"weight${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1kg\">
+                          <span class=\"input-group-addon col-2\">Height</span>
+                          <input id=\"height${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                        </div>
+                        <div class=\"input-group col-12\">
+                          <span class=\"input-group-addon col-2\">Depth</span>
+                          <input id=\"depth${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                          <span class=\"input-group-addon col-2\">Width</span>
+                          <input id=\"width${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                        </div>
+                     </div>`;
 
+    let tmpElement = document.createElement('div');
 
-    document.getElementById('cargoContainer').innerHTML += cargoHTML;
+    tmpElement.innerHTML = cargoHTML;
+
+    document.getElementById('cargoContainer').insertAdjacentElement("beforeend",tmpElement);
 
     cargoCounter++;
+}
+
+function loadInputForms(){
+    document.getElementById('confirmation').hidden = true;
+
+    document.getElementById('start').value = '';
+    document.getElementById('end').value = '';
+    document.getElementById('startTime').value = '';
+    document.getElementById('endTime').value = '';
+    document.getElementById('seats').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('cargoContainer').innerHTML = '';
+
+    document.getElementById('inputForm').hidden = false;
 }
 
 const request_btn = document.getElementById('requestDrive');
@@ -39,6 +62,7 @@ request_btn.addEventListener('click', function (e) {
     e.preventDefault();
     requestDrive();
 });
+
 function requestDrive(){
 
     firebase.auth().onAuthStateChanged(function(user) {
@@ -47,8 +71,8 @@ function requestDrive(){
             let endPlace = document.getElementById('end').value;
             let startDate = document.getElementById('startTime').value;
             let endDate = document.getElementById('endTime').value;
-            let seats = document.getElementById('seats').value;
-            let price = document.getElementById('price').value;
+            let seats = parseInt(document.getElementById('seats').value);
+            let description = document.getElementById('description').value;
 
 
             if(startPlace === ''){
@@ -76,16 +100,47 @@ function requestDrive(){
                 return;
             }
 
-            if(price === ''){
-                document.getElementById('price').select();
-                return;
+
+            let tmpCargo = {};
+
+            let i;
+            for(i = 1; i < cargoCounter; i++){
+                let tmpDescr = document.getElementById(`descr${i}`).value;
+                let tmpWeight = parseInt(document.getElementById(`weight${i}`).value);
+                let tmpHeight = parseInt(document.getElementById(`height${i}`).value);
+                let tmpDepth = parseInt(document.getElementById(`depth${i}`).value);
+                let tmpWidth = parseInt(document.getElementById(`width${i}`).value);
+
+                if(tmpDescr===''){
+                    document.getElementById(`descr${i}`).select();
+                    return;
+                }
+
+                if(tmpWeight===''){
+                    document.getElementById(`weight${i}`).select();
+                    return;
+                }
+
+                if(tmpHeight===''){
+                    document.getElementById(`height${i}`).select();
+                    return;
+                }
+
+                if(tmpDepth===''){
+                    document.getElementById(`depth${i}`).select();
+                    return;
+                }
+
+                if(tmpWidth===''){
+                    document.getElementById(`width${i}`).select();
+                    return;
+                }
+
+                tmpCargo[i] = {height:tmpHeight,width:tmpWidth,depth:tmpDepth,weight:tmpWeight,description:tmpDescr};
             }
-
-
-
-            /* TODO
-            FirebaseIntegration.createEntry('drive', startPlace, endPlace, startDate, endDate, price, vehicle.id, user.uid).then(r => undefined);
-             */
+            FirebaseIntegration.createEntry('request',startPlace,endPlace,startDate,endDate,-1,seats,description,tmpCargo,'',user.uid);
+            document.getElementById('inputForm').hidden = true;
+            document.getElementById('confirmation').hidden = false;
         } else {
             // No user is signed in.
         }

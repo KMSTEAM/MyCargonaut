@@ -7,18 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyCargonaut - Request a drive</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
-        integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
+          integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css"
-        integrity="sha256-L7y23l3+p5xkj4XVKXs/SFiJsa1asTc+DHeVBM+3XmE=" crossorigin="anonymous">
+          integrity="sha256-L7y23l3+p5xkj4XVKXs/SFiJsa1asTc+DHeVBM+3XmE=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css"
-        integrity="sha256-LxdDS9G94ArUz2UYVPo5FhSeD4owwcBFAQv2Nl1dNUU=" crossorigin="anonymous">
+          integrity="sha256-LxdDS9G94ArUz2UYVPo5FhSeD4owwcBFAQv2Nl1dNUU=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/docs/dist/docs.min.css"
-        integrity="sha256-7KbqWP9VrjsClNobITfwxgliQVxBopclsLJw+/CJwRE=" crossorigin="anonymous">
+          integrity="sha256-7KbqWP9VrjsClNobITfwxgliQVxBopclsLJw+/CJwRE=" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.min.css"
-        integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
+          integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
-        integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
+            integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
     <script src="/__/firebase/7.15.4/firebase-app.js"></script>
     <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
     <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
@@ -29,90 +29,106 @@
 </head>
 
 <body>
-    <div class="docs-container off-canvas off-canvas-sidebar-show">
-        <div class="docs-navbar">
-            <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
-            <div class="btns d-flex">
-                <section class="navbar-section">
-                    <div class="input-group input-inline">
-                        <input id="search" class="form-input" type="text" placeholder="Search your data" disabled>
-                        <button class="btn btn-secondary ml-1" id="logout-btn">Logout</button>
-                    </div>
-                </section>
-            </div>
+<div class="docs-container off-canvas off-canvas-sidebar-show">
+    <div class="docs-navbar">
+        <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
+        <div class="btns d-flex">
+            <section class="navbar-section">
+                <div class="input-group input-inline">
+                    <input id="search" class="form-input" type="text" placeholder="Search your data" disabled>
+                    <button class="btn btn-secondary ml-1" id="logout-btn">Logout</button>
+                </div>
+            </section>
         </div>
-        <div class="docs-sidebar off-canvas-sidebar" id="sidebar">
-            <div class="docs-brand"><a class="docs-logo" href="dash.html">
-                    <h2>MyCargonaut</h2>
-                </a>
-            </div>
-            <div class="docs-nav">
-                <div class="accordion-container">
-                    <div class="accordion">
-                        <input id="accordion-market" type="checkbox" name="docs-accordion-checkbox" hidden=""
-                            checked="checked">
-                        <label class="accordion-header c-hand" for="accordion-market">Marketplace</label>
-                        <div class="accordion-body">
-                            <ul class="menu menu-nav">
-                                <li class="menu-item"><a href="offer-drive.html">Offer a drive</a>
-                                </li>
-                                <li class="menu-item"><a href="request-drive.html">Request a drive</a>
-                                </li>
-                            </ul>
-                        </div>
+    </div>
+    <div class="docs-sidebar off-canvas-sidebar" id="sidebar">
+        <div class="docs-brand"><a class="docs-logo" href="dash.html">
+            <h2>MyCargonaut</h2>
+        </a>
+        </div>
+        <div class="docs-nav">
+            <div class="accordion-container">
+                <div class="accordion">
+                    <input id="accordion-market" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                           checked="checked">
+                    <label class="accordion-header c-hand" for="accordion-market">Marketplace</label>
+                    <div class="accordion-body">
+                        <ul class="menu menu-nav">
+                            <li class="menu-item"><a href="offer-drive.html">Offer a drive</a>
+                            </li>
+                            <li class="menu-item"><a href="request-drive.html">Request a drive</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="accordion">
-                        <input id="accordion-account" type="checkbox" name="docs-accordion-checkbox" hidden=""
-                            checked="checked">
-                        <label class="accordion-header c-hand" for="accordion-account">Your Account</label>
-                        <div class="accordion-body">
-                            <ul class="menu menu-nav">
-                                <li class="menu-item"><a href="your-drives.html">Your drives</a>
-                                </li>
-                                <li class="menu-item"><a href="your-vehicles.html">Your vehicles</a>
-                                </li>
-                                <li class="menu-item"><a href="account.html">Your account</a>
-                                </li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="accordion">
+                    <input id="accordion-account" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                           checked="checked">
+                    <label class="accordion-header c-hand" for="accordion-account">Your Account</label>
+                    <div class="accordion-body">
+                        <ul class="menu menu-nav">
+                            <li class="menu-item"><a href="your-drives.html">Your drives</a>
+                            </li>
+                            <li class="menu-item"><a href="your-vehicles.html">Your vehicles</a>
+                            </li>
+                            <li class="menu-item"><a href="account.html">Your account</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="accordion">
-                        <input id="accordion-general" type="checkbox" name="docs-accordion-checkbox" hidden=""
-                            checked="checked">
-                        <label class="accordion-header c-hand" for="accordion-general">General</label>
-                        <div class="accordion-body">
-                            <ul class="menu menu-nav">
-                                <li class="menu-item"><a href="about.html">About</a>
-                                </li>
-                                <li class="menu-item"><a href="legal.html">Legal</a>
-                                </li>
-                                <li class="menu-item"><a href="contact.html">Contact</a>
-                                </li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="accordion">
+                    <input id="accordion-general" type="checkbox" name="docs-accordion-checkbox" hidden=""
+                           checked="checked">
+                    <label class="accordion-header c-hand" for="accordion-general">General</label>
+                    <div class="accordion-body">
+                        <ul class="menu menu-nav">
+                            <li class="menu-item"><a href="about.html">About</a>
+                            </li>
+                            <li class="menu-item"><a href="legal.html">Legal</a>
+                            </li>
+                            <li class="menu-item"><a href="contact.html">Contact</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div><a class="off-canvas-overlay" href="#close"></a>
-        <div class="off-canvas-content">
-            <div class="docs-content" id="content">
-                <div class="">
-                    <h3 class="s-title">Request a drive</h3>
-                    <p>Here you can request a drive for your cargo</p>
-                    <div class="columns">
-                        <div class="column col-lg-12">
-                            <form action="#forms" class="form-horizontal">
-                                <fieldset>
+        </div>
+    </div>
+    <a class="off-canvas-overlay" href="#close"></a>
+    <div class="off-canvas-content">
+        <div class="docs-content" id="content">
+            <div class="">
+                <h3 class="s-title">Request a drive</h3>
+                <p>Here you can request a drive for your cargo</p>
+                <div class="columns">
+                    <div class="column col-lg-12">
+                        <form action="#forms" class="form-horizontal">
+                            <fieldset>
+                                <div id="confirmation" hidden>
+                                    <div class="h3 text-primary">
+                                        Your request has been registered
+                                        <div class="icon icon-check text-success icon-2x" style="padding-left:2rem"></div>
+                                    </div>
+                                    <div class="h5">
+                                        We will keep you updated!
+                                    </div>
+                                    <div style="padding-top: 2rem">
+                                        <button class="btn btn-primary btn-lg col-6" id="More_Requests_Button">Want to request more ?</button>
+                                    </div>
+                                </div>
+                                <div id="inputForm">
                                     <div class="form-group py-2">
                                         <div class="input-group col-12">
                                             <span class="input-group-addon addon-lg col-3 bg-primary">From</span>
-                                            <input type="text" class="form-input input-lg col-5" id="start" placeholder="City">
+                                            <input type="text" class="form-input input-lg col-5" id="start"
+                                                   placeholder="City">
                                         </div>
                                     </div>
                                     <div class="form-group py-2">
                                         <div class="input-group col-12">
                                             <span class="input-group-addon addon-lg col-3 bg-primary">To</span>
-                                            <input type="text" class="form-input input-lg col-5" id="end" placeholder="City">
+                                            <input type="text" class="form-input input-lg col-5" id="end"
+                                                   placeholder="City">
                                         </div>
                                     </div>
                                     <div class="form-group py-2">
@@ -130,7 +146,8 @@
                                     <div class="form-group py-2">
                                         <div class="input-group col-12">
                                             <span class="input-group-addon addon-lg col-3 bg-primary">Seats</span>
-                                            <input class="form-input input-lg" type="number" id="seats" placeholder="Needed seats">
+                                            <input class="form-input input-lg" type="number" id="seats"
+                                                   placeholder="Needed seats">
                                         </div>
                                     </div>
                                     <div class="form-group py-2">
@@ -139,34 +156,36 @@
                                     <div class="form-group" style="padding-top: 0.5rem">
                                         <div id="cargoContainer"></div>
                                         <div class="py-2">
-                                            <button class="btn btn-action btn-action" id="addCargo"><i class="icon icon-plus"></i></button>
+                                            <button class="btn btn-action btn-action" id="addCargo"><i
+                                                    class="icon icon-plus"></i></button>
                                         </div>
                                     </div>
 
                                     <div class="form-group" style="padding-top: 2rem">
-                                        <textarea class="form-input col-12" id="input-example-20"
-                                                  placeholder="Write more details about your cargo here" rows="3"></textarea>
+                                        <textarea class="form-input col-12" id="description"
+                                                  placeholder="Write more details about your cargo here"
+                                                  rows="3"></textarea>
                                     </div>
                                     <div class="py-2">
-                                        <button class="btn btn-primary btn-lg col-12" id="requestDrive">Request Drive</button>
+                                        <button class="btn btn-primary btn-lg col-12" id="requestDrive">Request Drive
+                                        </button>
                                     </div>
-
-                                </fieldset>
-                            </form>
-                        </div>
-                        <div class="column col-8 flex-centered ">
-                            <img src="imgs/truck2.png" alt="" width="60%">
-                        </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="column col-8 flex-centered hide-xl">
+                        <img src="imgs/truck2.png" alt="" width="60%">
                     </div>
                 </div>
-                <div class="docs-footer container grid-lg" id="copyright">
-                    <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span> by <a
-                            href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
-                </div>
+            </div>
+            <div class="docs-footer container grid-lg" id="copyright">
+                <p>Designed and built with Firebase, Spectre.css and <span class="text-error">♥</span> by <a
+                        href="https://git.thm.de/" target="_blank">Team KMSP</a>.</p>
             </div>
         </div>
     </div>
-    <script src="js/request_drive.js"></script>
+</div>
+<script src="js/request_drive.js"></script>
 </body>
-
 </html>
