@@ -30,7 +30,7 @@
         integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onload="loadUser()">
     <div class="docs-container off-canvas off-canvas-sidebar-show">
         <div class="docs-navbar">
             <a class="off-canvas-toggle btn btn-link btn-action" href="#sidebar"><i class="icon icon-menu"></i></a>
@@ -100,12 +100,12 @@
             <div class="docs-content" id="content">
                 <div class="container">
                     <h3 class="s-title">Your Account</h3>
-                    <p>Hello <b>John</b>! Here you can check your account data</p>
+                    <p>Hello <p class="userName"><b>John</b></p>! Here you can check your account data</p>
                     <div class="columns">
                         <div class="column col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title h5">
+                                    <div class="card-title h5" class="userName">
                                         John Beinecke
                                         <figure class="avatar" data-initial="JB" style="background-color: #5755d9;">
                                         </figure>

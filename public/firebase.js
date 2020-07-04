@@ -52,7 +52,7 @@ class FirebaseIntegration {
         title: 'Oops.. Something went wrong!',
         text: errorMessage,
         footer: 'Error Code: ' + errorCode
-      })
+      });
     });
   }
 
@@ -286,4 +286,10 @@ class FirebaseIntegration {
       return false;
     });
   }
+
+  static getUserInfo( userID){
+    return this._getXForUser("user", "username", userID);
+  }
+
+
 }
