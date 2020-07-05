@@ -247,6 +247,8 @@ class FirebaseIntegration {
       if(user){
         user.updatePassword(newPassword).then(function() {
           console.log("Passwrod updated successfully");
+          //window.alert("Passwrod updated successfully");
+          window.open("dash.html", "_self");
         }).catch(function(error) {
           console.log(error);
         });
@@ -280,10 +282,6 @@ let userName;
           var today = new Date();
           var diff = today.getUTCFullYear() - dateOfBirth.getUTCFullYear();
           document.getElementById("age").innerHTML = diff;
-          //return userName;
-          // console.log(today.getUTCFullYear() - dateOfBirth.getUTCFullYear());
-          // var y = FirebaseIntegration._getXForUser("offer", "createdBy", x.id);
-          //getOffersForUser
         });
         FirebaseIntegration.getEntriesForUser(user.uid).then(
             (drives) => {
@@ -293,69 +291,6 @@ let userName;
       }
     });
   }
-/*
-        var offers = firebase.firestore().collection("offer");
-        var query = offers.where("createdBy", "==" , "x.id");
-        var executedDrives = query.where("state","==","created");
-        console.log(executedDrives);
-      }
-  });
-}
-*/
-
-
-    /*
-    var user = firebase.auth().currentUser;
-    var username;
-    username = firebase.firestore().collection('user').doc(user.uid).get(username);
-    console.log(username);
-
-    //.then((doc) => doc.data());
-
-
-
-    if (user != null){
-      username = user.displayName;
-    }
-  }
-
-    /*
-//let Currentuser;
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    console.log(user.data.id);
-    //Currentuser = user;
-  }
-});
-}
-
-    if (user.data) {
-      console.log(user.data.username);
-    }else{
-      if (user.displayName){
-        console.log( user.displayName);
-      }else{
-        console.log( user.email);
-      }
-      //   document.getElementsByClassName("userName").innerHTML = userName
-    }
-  }
-});
-}
-
-const DisplayUser = function(user){
-  if (user.data){
-    return user.data.username;
-  }else{
-    if (user.displayName){
-      return user.displayName;
-    } else{
-      return user.email;
-    }
-  }
-};
-*/
-
     /**
      * Internal method for deleting a document of a specific user
      * @param x <string>
