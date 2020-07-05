@@ -12,7 +12,7 @@ Projektbeteiligte:
 * Marvin Matteo Seck-Eichhorn
 * John
 * Omar
-* Assem
+* Assem Hussein
 
 
 
