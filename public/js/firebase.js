@@ -1,3 +1,13 @@
+if (typeof require !== 'undefined') {
+  firebase = require('firebase');
+}
+
+if (typeof process !== 'undefined') {
+  if (process.env.FIREBASE_CONF !== undefined) {
+    firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONF));
+  }
+}
+
 /**
  * A class Handling the Firebase integration for Cargonaut
  */
@@ -14,41 +24,40 @@ class FirebaseIntegration {
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
     return firebase.auth().
-    createUserWithEmailAndPassword(email, password).
-    then(({
-      user,
-    }) => {
-      _user = user;
-      if (profilePicture) {
-        const storageRef = firebase.storage().
-        ref('users/' + user.uid + '/profilePicture/' +
-          profilePicture.name);
-        return storageRef.put(profilePicture).
-        then((profilePictureUploadTask) => {
-          return profilePictureUploadTask.ref.getDownloadURL();
+        createUserWithEmailAndPassword(email, password)
+        .then(({
+          user,
+        }) => {
+          _user = user;
+          if (profilePicture) {
+            const storageRef = firebase.storage().
+                ref('users/' + user.uid + '/profilePicture/' +
+                    profilePicture.name);
+            return storageRef.put(profilePicture).
+                then((profilePictureUploadTask) => {
+                  return profilePictureUploadTask.ref.getDownloadURL();
+                });
+          } else {
+            return Promise.resolve(
+                "https://firebasestorage.googleapis.com/v0/b/" +
+                "mycargonaut-b6f0d.appspot.com/o/users%2Fdefault" +
+                "%2FprofilePicture%2Fabstract-user-flat-1.png" +
+                "?alt=media&token=814ddce4-cea9-4150-a2a2-9f634e6ebe13");
+          }
+        })
+        .then((downloadURL) => {
+          const docRef = firebase.firestore().
+              collection(this.testify('user')).
+              doc(_user.uid);
+          return docRef.set({
+            username,
+            birthDate,
+            profilePictureURL: downloadURL,
+          }).then(() => docRef);
+        }).
+        then((userDoc) => {
+          return {user: _user, doc: userDoc};
         });
-      } else {
-        return firebase.storage().
-        ref('users/default/profilePicture/abstract-user-flat-1.png').
-        getDownloadURL();
-      }
-    }).
-    then((downloadURL) => {
-      const docRef = firebase.firestore().
-      collection(this.testify('user')).
-      doc(_user.uid);
-      return docRef.set({
-        username,
-        birthDate,
-        profilePictureURL: downloadURL,
-      }).then(() => docRef);
-    }).
-    then((userDoc) => {
-      return {
-        user: _user,
-        doc: userDoc
-      };
-    });
   }
 
   /**
@@ -121,6 +130,17 @@ class FirebaseIntegration {
    */
   static getEntriesForUser(userID) {
     return this._getXForUser('entry', 'creator', userID);
+  }
+
+  /**
+   * Gets Drive Entries for a user
+   * @param userID {string}
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getDriveEntriesForUser(userID) {
+    return this.getEntriesForUser(userID)
+      .then((entries) => entries
+        .filter(({data}) => data.type === 'drive'));
   }
 
   /**
@@ -221,11 +241,14 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static createEntry(
-    type, fromCity, toCity, departureTime, arrivalTime, price, description,
-    cargo, vehicleID, creatorID) {
-    const vehicle = firebase.firestore().
-    collection(this.testify('vehicle')).
-    doc(vehicleID);
+      type, fromCity, toCity, departureTime, arrivalTime, price, description,
+      cargo, vehicleID, creatorID) {
+    let vehicle = null;
+    if (vehicleID) {
+      vehicle = firebase.firestore().
+          collection(this.testify('vehicle')).
+          doc(vehicleID);
+    }
     const creator = firebase.firestore().
     collection(this.testify('user')).
     doc(creatorID);
@@ -257,8 +280,9 @@ class FirebaseIntegration {
    * @return {Promise<object>}
    */
   static createVehicle(
-    name, ownerID, type, maxCargoDepth, maxCargoHeight, description,
-    maxCargoWidth, maxCargoWeight, maxSeats) {
+      name, ownerID, type, description,
+      maxCargoDepth, maxCargoHeight, maxCargoWidth,
+      maxCargoWeight, maxSeats) {
     const owner = firebase.firestore().
     collection(this.testify('user')).
     doc(ownerID);
@@ -398,15 +422,12 @@ class FirebaseIntegration {
     collection(this.testify('user')).
     doc(userID);
     return firebase.firestore().
-    collection(x).
-    where(userFieldName, '==', userRef).
-    get().
-    then((snapshot) => snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        data: doc.data()
-      };
-    }), );
+        collection(x).
+        where(userFieldName, '==', userRef).
+        get().
+        then((snapshot) => snapshot.docs.map((doc) => {
+              return {id: doc.id, data: doc.data()};
+        }));
   }
 
   /**
@@ -522,4 +543,8 @@ class FirebaseIntegration {
       }
     });
   }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = FirebaseIntegration;
 }
