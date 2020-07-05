@@ -133,6 +133,17 @@ class FirebaseIntegration {
   }
 
   /**
+   * Gets Drive Entries for a user
+   * @param userID {string}
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getDriveEntriesForUser(userID) {
+    return this.getEntriesForUser(userID)
+      .then((entries) => entries
+        .filter(({data}) => data.type === 'drive'));
+  }
+
+  /**
    * Gets Vehicles for a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
