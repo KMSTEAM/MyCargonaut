@@ -1,0 +1,23 @@
+{
+  "name": "mycargonaut",
+  "version": "0.1.0",
+  "description": "",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "mocha --exit public/js/firebase.test.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KMSTEAM/MyCargonaut.git"
+  },
+  "author": "KMSTEAM",
+  "bugs": {
+    "url": "https://github.com/KMSTEAM/MyCargonaut/issues"
+  },
+  "homepage": "https://github.com/KMSTEAM/MyCargonaut#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "firebase": "^7.15.5",
+    "mocha": "^8.0.1"
+  }
+}
