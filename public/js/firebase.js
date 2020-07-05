@@ -1,3 +1,13 @@
+if (typeof require !== 'undefined') {
+  firebase = require('firebase');
+}
+
+if (typeof process !== 'undefined') {
+  if (process.env.FIREBASE_CONF !== undefined) {
+    firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONF));
+  }
+}
+
 /**
  * A class Handling the Firebase integration for Cargonaut
  */
@@ -14,8 +24,8 @@ class FirebaseIntegration {
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
     return firebase.auth().
-        createUserWithEmailAndPassword(email, password).
-        then(({
+        createUserWithEmailAndPassword(email, password)
+        .then(({
           user,
         }) => {
           _user = user;
@@ -28,12 +38,14 @@ class FirebaseIntegration {
                   return profilePictureUploadTask.ref.getDownloadURL();
                 });
           } else {
-            return firebase.storage().
-                ref('users/default/profilePicture/abstract-user-flat-1.png').
-                getDownloadURL();
+            return Promise.resolve(
+                "https://firebasestorage.googleapis.com/v0/b/" +
+                "mycargonaut-b6f0d.appspot.com/o/users%2Fdefault" +
+                "%2FprofilePicture%2Fabstract-user-flat-1.png" +
+                "?alt=media&token=814ddce4-cea9-4150-a2a2-9f634e6ebe13");
           }
-        }).
-        then((downloadURL) => {
+        })
+        .then((downloadURL) => {
           const docRef = firebase.firestore().
               collection(this.testify('user')).
               doc(_user.uid);
@@ -217,9 +229,12 @@ class FirebaseIntegration {
   static createEntry(
       type, fromCity, toCity, departureTime, arrivalTime, price, description,
       cargo, vehicleID, creatorID) {
-    const vehicle = firebase.firestore().
-        collection(this.testify('vehicle')).
-        doc(vehicleID);
+    let vehicle = null;
+    if (vehicleID) {
+      vehicle = firebase.firestore().
+          collection(this.testify('vehicle')).
+          doc(vehicleID);
+    }
     const creator = firebase.firestore().
         collection(this.testify('user')).
         doc(creatorID);
@@ -251,8 +266,9 @@ class FirebaseIntegration {
    * @return {Promise<object>}
    */
   static createVehicle(
-      name, ownerID, type, maxCargoDepth, maxCargoHeight, description,
-      maxCargoWidth, maxCargoWeight, maxSeats) {
+      name, ownerID, type, description,
+      maxCargoDepth, maxCargoHeight, maxCargoWidth,
+      maxCargoWeight, maxSeats) {
     const owner = firebase.firestore().
         collection(this.testify('user')).
         doc(ownerID);
@@ -389,8 +405,7 @@ class FirebaseIntegration {
         get().
         then((snapshot) => snapshot.docs.map((doc) => {
               return {id: doc.id, data: doc.data()};
-            }),
-        );
+        }));
   }
 
   /**
@@ -489,4 +504,8 @@ class FirebaseIntegration {
       }
     });
   }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = FirebaseIntegration;
 }

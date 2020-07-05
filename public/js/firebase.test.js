@@ -1,3 +1,8 @@
+if (typeof require !== 'undefined') {
+  FirebaseIntegration = require('./firebase.js');
+  chai = require('chai');
+}
+
 const should = chai.should();
 
 FirebaseIntegration._enableTesting();
@@ -9,8 +14,7 @@ describe('#registerUser()', function() {
   it('creates a new user', async function()  {
     const _user = await FirebaseIntegration.registerUser(
         "test@example.org", "123456", "test",
-        new Date(2020, 5, 23, 15, 28),
-        new File([], "picture.jpg"));
+        new Date(2020, 5, 23, 15, 28));
     user = _user.user;
     userDoc = _user.doc;
   });
@@ -25,7 +29,7 @@ describe('#registerUser()', function() {
     }
     throw new Error('Does not throw if user already exists');
   });
-  it('creates a new user without profile picture', async function()  {
+  it('creates another user', async function()  {
      _user2 = await FirebaseIntegration.registerUser(
         "test2@example.org", "123456", "test2",
         new Date(2020, 5, 23, 15, 28));
@@ -105,7 +109,7 @@ describe('#createVehicle()', function() {
 
   it('creates a vehicle', async function() {
     vehicle = await FirebaseIntegration.createVehicle("mycar", user.uid,
-        'car', 2, 2, 2, 2);
+        'car', 'a small car', 2, 2, 2, 2, 4);
     should.exist(vehicle);
   });
 });
@@ -116,10 +120,15 @@ describe('#createEntry()', function() {
   this.timeout(10000);
 
   it('creates an drive entry', async function() {
-    drive = await FirebaseIntegration.createEntry("drive", "Marburg", "Gießen", new Date(), new Date(), 15, vehicle.id, user.uid);
+    drive = await FirebaseIntegration.createEntry("drive", "Marburg",
+        "Gießen", new Date(), new Date(), 15,
+        'driving from Marburg to Gießen', null, vehicle.id, user.uid);
   });
   it('creates an request entry', async function() {
-    request = await FirebaseIntegration.createEntry("request", "Marburg", "Gießen", new Date(), new Date(), 10, vehicle.id, user2.uid);
+    request = await FirebaseIntegration.createEntry("request",
+        "Marburg", "Gießen", new Date(), new Date(),
+        10, 'looking for drive from Marburg to Gießen',
+        [] , null, user2.uid);
   });
 });
 
@@ -229,6 +238,5 @@ after(async function() {
   this.timeout(10000);
 
   const docs = [user, user2, userDoc, user2Doc, vehicle, drive, request, offer, review];
-  console.log(docs);
   await Promise.all(docs.map(doc => doc.delete()));
 });
