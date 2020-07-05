@@ -100,31 +100,27 @@
             <div class="docs-content" id="content">
                 <div class="container">
                     <h3 class="s-title">Your Account</h3>
-                    <p>Hello <p class="userName"><b>John</b></p>! Here you can check your account data</p>
+                    <p>Hello <b id="userName1">John</b>! Here you can check your account data</p>
                     <div class="columns">
                         <div class="column col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title h5" class="userName">
+                                    <div class="card-title h5" id="userName2">
                                         John Beinecke
-                                        <figure class="avatar" data-initial="JB" style="background-color: #5755d9;">
-                                        </figure>
                                     </div>
                                     <div class="card-subtitle text-gray"></div>
                                 </div>
                                 <div class="card-body">
                                     <div class="columns">
                                         <div class="column col-3">
-                                            Gender: <br>
-                                            Age: <br>
-                                            Member since: <br>
-                                            Executed drives: <br>
+                                            <p>Age:</p>
+                                            <p>Member since:</p>
+                                            <p>Executed drives:</p>
                                         </div>
                                         <div class="column col-9">
-                                            male <br>
-                                            27 <br>
-                                            2020 <br>
-                                            13 <br>
+                                            <p id="age">27</p>
+                                            <p>2020</p>
+                                            <p id="executedDrives">13</p>
                                         </div>
                                     </div>
                                 </div>
@@ -142,10 +138,10 @@
                                     <div class="card-subtitle text-gray"></div>
                                 </div>
                                 <div class="card-body">
-                                    <p>There is no payment method here yet.</p>
+                                    <p id="paymentElement">There is no payment method here yet.</p>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="btn btn-primary next" href="add-payment.html">Add new method</a>
+                                    <button class="btn btn-primary next" id="paymentBtn">Add new method</button>
                                 </div>
                             </div>
                         </div>
