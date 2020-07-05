@@ -83,10 +83,6 @@ describe('#loginUser()', function() {
     }
     throw new Error('Does not throw if email and password are invalid');
   });
-
-  afterEach(async function() {
-    await firebase.auth().signOut();
-  });
 });
 
 describe('#getUserByID()', function() {

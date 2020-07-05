@@ -4,7 +4,9 @@ if (typeof require !== 'undefined') {
 
 if (typeof process !== 'undefined') {
   if (process.env.FIREBASE_CONF !== undefined) {
-    firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONF));
+    const confJSON = Buffer.from(process.env.FIREBASE_CONF, 'base64').toString();
+    const conf = JSON.parse(confJSON);
+    firebase.initializeApp(conf);
   }
 }
 
