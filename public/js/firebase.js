@@ -4,7 +4,8 @@ if (typeof require !== 'undefined') {
 
 if (typeof process !== 'undefined') {
   if (process.env.FIREBASE_CONF !== undefined) {
-    const confJSON = Buffer.from(process.env.FIREBASE_CONF, 'base64').toString();
+    const confJSON = Buffer.from(process.env.FIREBASE_CONF, 'base64').
+        toString();
     const conf = JSON.parse(confJSON);
     firebase.initializeApp(conf);
   }
@@ -26,8 +27,7 @@ class FirebaseIntegration {
   static registerUser(email, password, username, birthDate, profilePicture) {
     let _user;
     return firebase.auth().
-        createUserWithEmailAndPassword(email, password)
-        .then(({
+        createUserWithEmailAndPassword(email, password).then(({
           user,
         }) => {
           _user = user;
@@ -41,13 +41,12 @@ class FirebaseIntegration {
                 });
           } else {
             return Promise.resolve(
-                "https://firebasestorage.googleapis.com/v0/b/" +
-                "mycargonaut-b6f0d.appspot.com/o/users%2Fdefault" +
-                "%2FprofilePicture%2Fabstract-user-flat-1.png" +
-                "?alt=media&token=814ddce4-cea9-4150-a2a2-9f634e6ebe13");
+                'https://firebasestorage.googleapis.com/v0/b/' +
+                'mycargonaut-b6f0d.appspot.com/o/users%2Fdefault' +
+                '%2FprofilePicture%2Fabstract-user-flat-1.png' +
+                '?alt=media&token=814ddce4-cea9-4150-a2a2-9f634e6ebe13');
           }
-        })
-        .then((downloadURL) => {
+        }).then((downloadURL) => {
           const docRef = firebase.firestore().
               collection(this.testify('user')).
               doc(_user.uid);
@@ -140,9 +139,8 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getDriveEntriesForUser(userID) {
-    return this.getEntriesForUser(userID)
-      .then((entries) => entries
-        .filter(({data}) => data.type === 'drive'));
+    return this.getEntriesForUser(userID).
+        then((entries) => entries.filter(({data}) => data.type === 'drive'));
   }
 
   /**
@@ -193,7 +191,7 @@ class FirebaseIntegration {
    */
   static getRequestsForUser(userID) {
     return Promise.all([
-      this._getXForUser('entry', 'creator', userID)
+      this._getXForUser('entry', 'creator', userID),
     ]).then((entries) => {
       const requests = entries[0].filter(entry => entry.data.type == 'request');
       return requests;
@@ -206,15 +204,15 @@ class FirebaseIntegration {
    */
   static getDrivesList() {
     return firebase.firestore().
-    collection(x).
-    where('departureTime', '>', new Date()).
-    get().
-    then((snapshot) => snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        data: doc.data()
-      };
-    }));
+        collection(x).
+        where('departureTime', '>', new Date()).
+        get().
+        then((snapshot) => snapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            data: doc.data(),
+          };
+        }));
   }
 
   /**
@@ -223,9 +221,9 @@ class FirebaseIntegration {
    */
   static getAllMyOpenOffers(userID) {
     return this.getOffersForUser(userID).
-    then((offers) => offers.filter((offer) => {
-      return !['rejected', 'paid'].includes(offer.data.state);
-    }));
+        then((offers) => offers.filter((offer) => {
+          return !['rejected', 'paid'].includes(offer.data.state);
+        }));
   }
 
   /**
@@ -244,20 +242,22 @@ class FirebaseIntegration {
    * @returns {Promise<object>}
    */
   static createEntry(
-      type, fromCity, toCity, departureTime, arrivalTime, price, seats, description,
+      type, fromCity, toCity, departureTime, arrivalTime, price, seats,
+      description,
       cargo, vehicleID, creatorID) {
     let vehicle;
 
-    if (vehicleID){
-        vehicle = firebase.firestore()
-        .collection(this.testify('vehicle'))
-        .doc(vehicleID);
+    if (vehicleID) {
+      vehicle = firebase.firestore().
+          collection(this.testify('vehicle')).
+          doc(vehicleID);
     } else {
-        vehicle = -1;
+      vehicle = -1;
     }
 
-    const creator = firebase.firestore()
-      .collection(this.testify('user')).doc(creatorID);
+    const creator = firebase.firestore().
+        collection(this.testify('user')).
+        doc(creatorID);
     return firebase.firestore().collection(this.testify('entry')).add({
       type,
       fromCity,
@@ -291,8 +291,8 @@ class FirebaseIntegration {
       maxCargoDepth, maxCargoHeight, maxCargoWidth,
       maxCargoWeight, maxSeats) {
     const owner = firebase.firestore().
-    collection(this.testify('user')).
-    doc(ownerID);
+        collection(this.testify('user')).
+        doc(ownerID);
     return firebase.firestore().collection(this.testify('vehicle')).add({
       name,
       owner,
@@ -317,17 +317,17 @@ class FirebaseIntegration {
    */
   static createOffer(driveID, requestID, creatorID, createForID, price) {
     const drive = firebase.firestore().
-    collection(this.testify('entry')).
-    doc(driveID);
+        collection(this.testify('entry')).
+        doc(driveID);
     const request = firebase.firestore().
-    collection(this.testify('entry')).
-    doc(requestID);
+        collection(this.testify('entry')).
+        doc(requestID);
     const creator = firebase.firestore().
-    collection(this.testify('user')).
-    doc(creatorID);
+        collection(this.testify('user')).
+        doc(creatorID);
     const createdFor = firebase.firestore().
-    collection(this.testify('user')).
-    doc(createForID);
+        collection(this.testify('user')).
+        doc(createForID);
     const state = 'created';
     return firebase.firestore().collection(this.testify('offer')).add({
       drive,
@@ -348,11 +348,11 @@ class FirebaseIntegration {
    */
   static createReview(reviewedID, reviewerID, review, stars) {
     const reviewed = firebase.firestore().
-    collection(this.testify('user')).
-    doc(reviewedID);
+        collection(this.testify('user')).
+        doc(reviewedID);
     const reviewer = firebase.firestore().
-    collection(this.testify('user')).
-    doc(reviewerID);
+        collection(this.testify('user')).
+        doc(reviewerID);
     return firebase.firestore().collection(this.testify('review')).add({
       reviewed,
       reviewer,
@@ -368,11 +368,11 @@ class FirebaseIntegration {
    */
   static updateOfferState(offerID, newState) {
     return firebase.firestore().
-    collection(this.testify('offer')).
-    doc(offerID).
-    update({
-      state: newState
-    });
+        collection(this.testify('offer')).
+        doc(offerID).
+        update({
+          state: newState,
+        });
   }
 
   /**
@@ -381,38 +381,38 @@ class FirebaseIntegration {
    */
   static matchRequestAndDrives(userID) {
     const creator = firebase.firestore().
-    collection(this.testify('user')).
-    doc(userID);
+        collection(this.testify('user')).
+        doc(userID);
     return firebase.firestore().
-    collection(this.testify('entry')).
-    where('type', '==', 'driveRequest').
-    where('creator', '==', creator).
-    where('departureTime', '>', new Date()).
-    get().
-    then((requests) => {
-      return Promise.all(requests.docs.map((request) => {
-        const {
-          fromCity,
-          toCity
-        } = request.data();
-        return firebase.firestore().
         collection(this.testify('entry')).
-        where('type', '==', 'drive').
+        where('type', '==', 'driveRequest').
+        where('creator', '==', creator).
         where('departureTime', '>', new Date()).
-        where('fromCity', '==', fromCity).
-        where('toCity', '==', toCity).
-        get();
-      })).then((driveRefs) => {
-        return driveRefs.flat().map((driveRef) => {
-          return driveRef.docs.map((drive) => {
-            return {
-              id: drive.id,
-              data: drive.data()
-            };
+        get().
+        then((requests) => {
+          return Promise.all(requests.docs.map((request) => {
+            const {
+              fromCity,
+              toCity,
+            } = request.data();
+            return firebase.firestore().
+                collection(this.testify('entry')).
+                where('type', '==', 'drive').
+                where('departureTime', '>', new Date()).
+                where('fromCity', '==', fromCity).
+                where('toCity', '==', toCity).
+                get();
+          })).then((driveRefs) => {
+            return driveRefs.flat().map((driveRef) => {
+              return driveRef.docs.map((drive) => {
+                return {
+                  id: drive.id,
+                  data: drive.data(),
+                };
+              });
+            }).flat();
           });
-        }).flat();
-      });
-    });
+        });
   }
 
   /**
@@ -426,14 +426,14 @@ class FirebaseIntegration {
   static _getXForUser(x, userFieldName, userID) {
     x = this.testify(x);
     const userRef = firebase.firestore().
-    collection(this.testify('user')).
-    doc(userID);
+        collection(this.testify('user')).
+        doc(userID);
     return firebase.firestore().
         collection(x).
         where(userFieldName, '==', userRef).
         get().
         then((snapshot) => snapshot.docs.map((doc) => {
-              return {id: doc.id, data: doc.data()};
+          return {id: doc.id, data: doc.data()};
         }));
   }
 
@@ -453,11 +453,10 @@ class FirebaseIntegration {
       }
       return {
         id: doc.id,
-        data: doc.data()
+        data: doc.data(),
       };
     });
   }
-
 
   static getXByRef(ref) {
     return ref.get().then((doc) => {
@@ -466,11 +465,10 @@ class FirebaseIntegration {
       }
       return {
         id: doc.id,
-        data: doc.data()
+        data: doc.data(),
       };
     });
   }
-
 
   static createMessage(name, email, subject, message) {
     // const messageCreator = firebase.firestore().collection('user').doc(UserID);
@@ -479,10 +477,10 @@ class FirebaseIntegration {
       email: email,
       subject: subject,
       message: message,
-    }).then(function () {
+    }).then(function() {
       console.log('Data sent');
 
-    }).catch(function (error) {
+    }).catch(function(error) {
       console.log(error);
     });
 
@@ -490,9 +488,9 @@ class FirebaseIntegration {
 
   static changeUserPassword(newPassword) {
     var user = firebase.auth().currentUser;
-    user.updatePassword(newPassword).then(function () {
+    user.updatePassword(newPassword).then(function() {
       console.log('Passwrod updated successfully');
-    }).catch(function (error) {
+    }).catch(function(error) {
       console.log(error);
     });
   }
@@ -510,17 +508,17 @@ class FirebaseIntegration {
 
     const userRef = firebase.firestore().collection('user').doc(userID);
     firebase.firestore().
-    collection(collection).
-    doc(x).
-    delete().
-    then(function () {
-      console.log('Document successfully deleted!');
-      return true;
-    }).
-    catch(function (error) {
-      console.error('Error removing document: ', error);
-      return false;
-    });
+        collection(collection).
+        doc(x).
+        delete().
+        then(function() {
+          console.log('Document successfully deleted!');
+          return true;
+        }).
+        catch(function(error) {
+          console.error('Error removing document: ', error);
+          return false;
+        });
   }
 
   /**
@@ -544,7 +542,7 @@ class FirebaseIntegration {
   }
 
   static checkForRedirect() {
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged(function(user) {
       if (!user) {
         window.location.href = 'index.html';
       }
