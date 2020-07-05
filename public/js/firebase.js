@@ -246,21 +246,18 @@ class FirebaseIntegration {
   static createEntry(
       type, fromCity, toCity, departureTime, arrivalTime, price, seats, description,
       cargo, vehicleID, creatorID) {
+    let vehicle;
 
-      let vehicle;
+    if (vehicleID){
+        vehicle = firebase.firestore()
+        .collection(this.testify('vehicle'))
+        .doc(vehicleID);
+    } else {
+        vehicle = -1;
+    }
 
-      if(vehicleID!==''){
-          vehicle = firebase.firestore().
-          collection(this.testify('vehicle')).
-          doc(vehicleID);
-      } else {
-          vehicle = -1;
-      }
-
-
-    const creator = firebase.firestore().
-    collection(this.testify('user')).
-    doc(creatorID);
+    const creator = firebase.firestore()
+      .collection(this.testify('user')).doc(creatorID);
     return firebase.firestore().collection(this.testify('entry')).add({
       type,
       fromCity,

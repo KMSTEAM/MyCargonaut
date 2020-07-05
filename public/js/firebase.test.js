@@ -116,14 +116,15 @@ describe('#createEntry()', function() {
   this.timeout(10000);
 
   it('creates an drive entry', async function() {
+    console.log(user.uid);
     drive = await FirebaseIntegration.createEntry("drive", "Marburg",
-        "Gießen", new Date(), new Date(), 15,
+        "Gießen", new Date(), new Date(), 15, 4,
         'driving from Marburg to Gießen', null, vehicle.id, user.uid);
   });
   it('creates an request entry', async function() {
     request = await FirebaseIntegration.createEntry("request",
         "Marburg", "Gießen", new Date(), new Date(),
-        10, 'looking for drive from Marburg to Gießen',
+        10, -1, 'looking for drive from Marburg to Gießen',
         [] , null, user2.uid);
   });
 });
