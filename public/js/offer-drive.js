@@ -5,6 +5,16 @@ window.onload = function(){
     loadVehicles();
 };
 
+document.getElementById('Offer_Button').addEventListener("click", function(e) {
+    e.preventDefault();
+    storeDrive();
+});
+
+document.getElementById('More_Offers_Button').addEventListener("click",function (e) {
+   e.preventDefault();
+   loadInputForms();
+});
+
 function loadVehicles(){
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -27,7 +37,19 @@ function loadVehicles(){
             // User not logged in
         }
     });
+}
 
+function loadInputForms(){
+    document.getElementById('confirmation').hidden = true;
+
+    document.getElementById('start').value = '';
+    document.getElementById('end').value = '';
+    document.getElementById('startTime').value = '';
+    document.getElementById('endTime').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('description').value = '';
+
+    document.getElementById('inputForm').hidden = false;
 }
 
 function storeDrive(){
@@ -40,6 +62,7 @@ function storeDrive(){
             let endDate = document.getElementById('endTime').value;
             let vehicleName = document.getElementById('vehicle').value;
             let price = document.getElementById('price').value;
+            let description = document.getElementById('description').value;
 
 
             if(startPlace === ''){
@@ -69,7 +92,11 @@ function storeDrive(){
 
             let vehicle = vehicles.find(v => v.data.name.localeCompare(vehicleName) === 0);
 
-            FirebaseIntegration.createEntry('drive', startPlace, endPlace, startDate, endDate, price, vehicle.id, user.uid).then(r => undefined);
+            FirebaseIntegration.createEntry('drive',startPlace,endPlace,startDate,endDate,price,description,[],vehicle.id,user.uid);
+
+            document.getElementById('inputForm').hidden = true;
+            document.getElementById('confirmation').hidden = false;
+
         } else {
             // No user is signed in.
         }

@@ -236,21 +236,28 @@ class FirebaseIntegration {
    * @param departureTime {Date}
    * @param arrivalTime {Date}
    * @param price {number}
+   * @param seats {number}
    * @param description {string}
    * @param vehicleID {string}
    * @param creatorID {string}
-   * @param cargo {Array<{height: number, width: number, depth: number, weight: number, seats: number}> | null}
+   * @param cargo {Array<{height: number, width: number, depth: number, weight: number, description: string}> | null}
    * @returns {Promise<object>}
    */
   static createEntry(
-      type, fromCity, toCity, departureTime, arrivalTime, price, description,
+      type, fromCity, toCity, departureTime, arrivalTime, price, seats, description,
       cargo, vehicleID, creatorID) {
-    let vehicle = null;
-    if (vehicleID) {
-      vehicle = firebase.firestore().
+
+      let vehicle;
+
+      if(vehicleID!==''){
+          vehicle = firebase.firestore().
           collection(this.testify('vehicle')).
           doc(vehicleID);
-    }
+      } else {
+          vehicle = -1;
+      }
+
+
     const creator = firebase.firestore().
     collection(this.testify('user')).
     doc(creatorID);
@@ -261,6 +268,7 @@ class FirebaseIntegration {
       departureTime,
       arrivalTime,
       price,
+      seats,
       description,
       cargo,
       vehicle,
