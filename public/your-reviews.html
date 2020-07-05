@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MyCargonaut - Account</title>
+    <title>MyCargonaut - Your Reviews</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css"
         integrity="sha256-J24PZiunX9uL1Sdmbe6YT9kNuV5lfVxj3A6Kij5UP6k=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css"
@@ -20,12 +20,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.11.5/dist/sweetalert2.all.min.js"
         integrity="sha256-mmZUVoGT35BoRGHNZJIaYOz4+EaLVsuu2p23NSIOwCY=" crossorigin="anonymous"></script>
 
-    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
-    <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
-    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
-    <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
-    <script src="/__/firebase/init.js"></script>
-    <script src="js/firebase.js"></script>
 </head>
 
 <body>
@@ -103,57 +97,21 @@
         <div class="off-canvas-content">
             <div class="docs-content" id="content">
                 <div class="container">
-                    <h3 class="s-title">Your Account</h3>
-                    <p>Hello <b>John</b>! Here you can check your account data</p>
+                    <h3 class="s-title">Your reviews</h3>
+                    <p>Here you can look at reviews your customers have written about you</p>
                     <div class="columns">
                         <div class="column col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title h5">
-                                        John Beinecke
-                                        <figure class="avatar" data-initial="JB" style="background-color: #5755d9;">
-                                        </figure>
-                                    </div>
-                                    <div class="card-subtitle text-gray"></div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="columns">
-                                        <div class="column col-3">
-                                            Gender: <br>
-                                            Age: <br>
-                                            Member since: <br>
-                                            Executed drives: <br>
-                                        </div>
-                                        <div class="column col-9">
-                                            male <br>
-                                            27 <br>
-                                            2020 <br>
-                                            13 <br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <a class="btn btn-primary next" data-toggle="modal"
-                                        href="changePassword.html">Change
-                                        password</a>
-                                    <a class="btn btn-danger next" href="delete-account.html" id="deleteAccount">Delete
-                                        account</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title h5">Payment methods</div>
-                                    <div class="card-subtitle text-gray"></div>
-                                </div>
-                                <div class="card-body">
-                                    <p>There is no payment method here yet.</p>
-                                </div>
-                                <div class="card-footer">
-                                    <a class="btn btn-primary next" href="add-payment.html">Add new method</a>
-                                </div>
-                            </div>
+                            <table class="table table-scroll table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Stars</th>
+                                        <th>Review</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviewsList">
+
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>
@@ -166,8 +124,14 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script src="js/account.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-auth.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.15.4/firebase-storage.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/your-reviews.js"></script>
+
 </body>
 
 </html>
