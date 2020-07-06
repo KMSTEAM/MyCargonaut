@@ -106,10 +106,10 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Category</th>
-                                        <th>Max Weight</th>
-                                        <th>Max Depth</th>
-                                        <th>Max Height</th>
-                                        <th>Max Width</th>
+                                        <th>Weight</th>
+                                        <th>Depth</th>
+                                        <th>Height</th>
+                                        <th>Width</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -132,44 +132,53 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="name">Name</label>
-                                        <input class="form-input" type="text" id="name" placeholder="Your model">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label input-group-addon addon-lg col-3 bg-primary" for="name">Name</label>
+                                            <input class="form-input input-lg col-3" type="text" id="name" placeholder="Your model">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="seats">Seats</label>
-                                        <input class="form-input" type="number" id="seats"
-                                            placeholder="Available seats in your vehicle">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label input-group-addon addon-lg col-3 bg-primary" for="seats">Seats</label>
+                                            <input class="form-input input-lg col-3" type="number" id="seats"
+                                                   placeholder="Available seats in your vehicle">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="maxCargoDepth">Maximum cargo depth</label>
-                                        <input class="form-input" type="number" id="maxCargoDepth"
-                                            placeholder="The maximum cargo depth in cm">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label  input-group-addon addon-lg col-3 bg-primary" for="maxCargoDepth">Cargo depth</label>
+                                            <input class="form-input input-lg col-3" type="number" id="maxCargoDepth"
+                                                   placeholder="The cargo depth in cm">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="maxCargoHeight">Maximum cargo height</label>
-                                        <input class="form-input" type="number" id="maxCargoHeight"
-                                            placeholder="The maximum cargo height in cm">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label  input-group-addon addon-lg col-3 bg-primary" for="maxCargoHeight">Cargo height</label>
+                                            <input class="form-input input-lg col-3" type="number" id="maxCargoHeight"
+                                                   placeholder="The cargo height in cm">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="maxCargoWidth">Maximum cargo width</label>
-                                        <input class="form-input" type="number" id="maxCargoWidth"
-                                            placeholder="The maximum cargo width in cm">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label input-group-addon addon-lg col-3 bg-primary" for="maxCargoWidth">Cargo width</label>
+                                            <input class="form-input input-lg col-3" type="number" id="maxCargoWidth"
+                                                   placeholder="The cargo width in cm">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="maxCargoWeight">Maximum cargo weight</label>
-                                        <input class="form-input" type="number" id="maxCargoWeight"
-                                            placeholder="The maximum cargo weight in kg">
+                                        <div class="input-group col-12 py-2">
+                                            <label class="form-label input-group-addon addon-lg col-3 bg-primary" for="maxCargoWeight">Cargo weight</label>
+                                            <input class="form-input input-lg col-3" type="number" id="maxCargoWeight"
+                                                   placeholder="The cargo weight in kg">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="infos">More information</label>
                                         <textarea class="form-input" id="infos"
                                             placeholder="Write more details about your vehicle here"
                                             rows="3"></textarea>
                                     </div>
                                     <div class="p-2">
-                                        <button class="btn btn-block btn-primary p-centered" id="addVehicle">Add vehicle
-                                            to the
-                                            list</button>
+                                        <button class="btn btn-block btn-primary p-centered" id="addVehicle">Add vehicle to the list</button>
                                     </div>
 
 

@@ -20,7 +20,7 @@ function loadRequests() {
                         for (i = 0; i < requests.length; i++) {
                             console.log("id: " + requests[i].id + "date: " + requests[i].data.arrivalTime);
                             const date = new Date(requests[i].data.arrivalTime);
-                            requestsListHtml += "<tr><td>" + date.toLocaleDateString() + "</td><td>" + requests[i].data.fromCity + "</td><td>" + requests[i].data.toCity + "</td><td>" + requests[i].data.price + "€</td><td><button class=\"btn btn-primary p-centered\" id=\"" + requests[i].id + "\" onClick=\"cancelRequest(this.id)\">Cancel</button></td></tr>";
+                            requestsListHtml += "<tr><td>" + date.toLocaleDateString() + "</td><td>" + requests[i].data.fromCity + "</td><td>" + requests[i].data.toCity + "</td><td><button class=\"btn btn-primary p-centered\" id=\"" + requests[i].id + "\" onClick=\"cancelRequest(this.id)\">Cancel</button></td></tr>";
 
                         }
                     } else {

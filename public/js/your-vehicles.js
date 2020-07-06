@@ -2,7 +2,12 @@ window.onload = function(){
     FirebaseIntegration.checkForRedirect();
     loadVehicles();
 };
-document.getElementById("addVehicle").addEventListener("click", addVehicle);
+
+document.getElementById('addVehicle').addEventListener("click",function (e) {
+    e.preventDefault();
+    addVehicle();
+});
+
 
 function loadVehicles() {
     //FirebaseIntegration.loginUser("seckeichhorn@gmail.com", "cargonaut")
@@ -38,13 +43,14 @@ function addVehicle() {
         if (user) {
             const name = document.getElementById("name").value;
             const type = document.getElementById("category").value;
+            const description = document.getElementById("infos").value;
             const maxCargoDepth = document.getElementById("maxCargoDepth").value;
             const maxCargoHeight = document.getElementById("maxCargoHeight").value;
             const maxCargoWidth = document.getElementById("maxCargoWidth").value;
             const maxCargoWeight = document.getElementById("maxCargoWeight").value;
+            const seats = document.getElementById("seats").value;
 
-            FirebaseIntegration.createVehicle(name, user.uid, type, maxCargoDepth, maxCargoHeight, maxCargoWidth,
-                maxCargoWeight);
+            FirebaseIntegration.createVehicle(name,user.uid,type,description,maxCargoDepth,maxCargoHeight,maxCargoWidth,maxCargoWeight,seats);
 
             loadVehicles();
         }
