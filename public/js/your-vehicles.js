@@ -2,12 +2,7 @@ window.onload = function(){
     FirebaseIntegration.checkForRedirect();
     loadVehicles();
 };
-
-document.getElementById('addVehicle').addEventListener("click",function (e) {
-    e.preventDefault();
-    addVehicle();
-});
-
+document.getElementById("addVehicle").addEventListener("click", addVehicle);
 
 function loadVehicles() {
     //FirebaseIntegration.loginUser("seckeichhorn@gmail.com", "cargonaut")

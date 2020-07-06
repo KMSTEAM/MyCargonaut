@@ -79,12 +79,14 @@ async function setMatch(match) {
     if (!data) {
         // document is snapshot, start reading directly
         data = match;
-    };
+    }
 
-    var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
-    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    /*var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
+    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2})., "$1").substring(0, 5);
     var arrivalTime = new Date(data.arrivalTime * 1000).toDateString().substring(0, 9);
-    arrivalTime += ', ' + new Date(data.arrivalTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    arrivalTime += ', ' + new Date(data.arrivalTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}), "$1").substring(0, 5);*/
+    const departureTime = new Date(data.departureTime);
+    const arrivalTime = new Date(data.arrivalTime);
     var type = data.type.substring(0, 1).toUpperCase() + data.type.substring(1);
 
     var creator = {
@@ -97,12 +99,16 @@ async function setMatch(match) {
     var vehicle = 'Not Available';
     if (data.vehicle) {
         vehicle = await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
-            const vcl = v.data.name + ' [' + v.data.type + ']';
-            return vcl;
+            if (v) {
+                const vcl = v.data.name + ' [' + v.data.type + ']';
+                return vcl;
+            } else {
+                return 'Not Available';
+            }
         });
     }
 
-    return match = {
+    return {
         id: match.id,
         fromCity: data.fromCity,
         toCity: data.toCity,
@@ -113,14 +119,14 @@ async function setMatch(match) {
         vehicle: vehicle,
         type: type
     };
-};
+}
 
 async function setDrive(drive) {
     var data = drive.data;
     if (!data) {
         // document is snapshot, start reading directly
         data = drive;
-    };
+    }
 
     var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
     departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
@@ -132,7 +138,7 @@ async function setDrive(drive) {
         return username;
     });
 
-    return drive = {
+    return {
         id: drive.id,
         type: 'drive',
         creator: creator,
@@ -142,30 +148,36 @@ async function setDrive(drive) {
         fromCity: data.fromCity,
         toCity: data.toCity,
     };
-};
+}
 
 async function setRequest(request) {
+    console.log(request);
     var data = request.data;
     if (!data) {
         // document is snapshot, start reading directly
         data = request;
-    };
-    var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
-    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1").substring(0, 5);
+    }
+    /*var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
+    departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace((\d{2}:\d{2}:\d{2})., "$1").substring(0, 5);*/
+    const departureTime = new Date(data.departureTime);
     var creator = await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
         return username;
     });
-    var vehicle = await FirebaseIntegration.getVehicleById(data.vehicle.id).then(v => {
-        if (v) {
-            const vcl = v.data.name + ' [' + v.data.type + ']';
-            return vcl;
-        };
-    });
+    var vehicle;
+    if (data.vehicle !== -1) {
+        vehicle = await FirebaseIntegration.getVehicleById(data.vehicle.id).
+            then(v => {
+                if (v) {
+                    const vcl = v.data.name + ' [' + v.data.type + ']';
+                    return vcl;
+                }
+            });
+    }
     if (!vehicle) {
         vehicle = 'Not Available';
-    };
-    return request = {
+    }
+    return {
         id: request.id,
         fromCity: data.fromCity,
         toCity: data.toCity,
@@ -173,14 +185,14 @@ async function setRequest(request) {
         departureTime: departureTime,
         vehicle: vehicle
     };
-};
+}
 
 async function setOffer(offer, request) {
     var data = offer.data;
     if (!data) {
         // document is snapshot, start reading directly
         data = offer;
-    };
+    }
     var creator = await FirebaseIntegration.getUserByID(data.createdBy.id).then(user => {
         const username = DisplayName(user);
         return username;
@@ -197,7 +209,7 @@ async function setOffer(offer, request) {
         fromCity = drive.fromCity;
         toCity = drive.toCity;
     }
-    return offer = {
+    return {
         id: offer.id,
         createdBy: creator,
         createdFor: DisplayName(currentUser),
@@ -224,12 +236,12 @@ async function renderOffers(offers) {
             var vehicle = offer.vehicle;
             if (!vehicle) {
                 vehicle = 'Not Available';
-            };
+            }
             offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
-        };
+        }
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
-    };
+    }
     document.getElementById("openOffers").innerHTML = offerCardHtml;
 }
 
@@ -239,7 +251,7 @@ async function renderRequests(requests) {
         for (let i = 0; i < requests.length; i++) {
             request = await setRequest(requests[i]);
             requestsList.push(request);
-            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br>Vehicle: <br></div><div class=\"column text-center\">" + request.departureTime + " <br>" + request.creator + " <br>" + request.vehicle + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>"
+            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br></div><div class=\"column text-center\">" + request.departureTime.toLocaleString() + " <br>" + request.creator + "</div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>";
         }
     } else {
         requestCardHtml = "<tr><td colspan=\"5\">You don't have any requests yet</td></tr>";
@@ -253,7 +265,7 @@ async function renderMatches(matches) {
         for (let i = 0; i < matches.length; i++) {
             match = await setMatch(matches[i]);
             matchesList.push(match);
-            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime + " <br>" + match.arrivalTime + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"getInTouch(event,'"+ match.creator.id +"')\">Get in Touch!</button></div></div></div></div>";
+            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime.toLocaleString() + " <br>" + match.arrivalTime.toLocaleString() + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " € <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"getInTouch(event,'"+ match.creator.id +"')\">Get in Touch!</button></div></div></div></div>";
         }
     } else {
         matchCardHtml = "<tr><td colspan=\"5\">Sorry, we couldn't find any match!</td></tr>";
@@ -306,7 +318,7 @@ async function rejectOffer(e, offerId){
         .then(() => {
             e.target.parentElement.className = 'panel-footer text-center';
             e.target.parentElement.innerHTML = '<div class="bg-error">Rejected</div>';
-            var msg = 'Offer Rejected'
+            var msg = 'Offer Rejected';
             alertDone(msg);
         }, error => {
             handleErrors(error);
@@ -319,7 +331,7 @@ async function acceptOffer(e, offerId){
         .then(() => {
             e.target.parentElement.className = 'panel-footer text-center';
             e.target.parentElement.innerHTML = '<div class="bg-success">Accepted</div>';
-            var msg = 'Offer Accepted'
+            var msg = 'Offer Accepted';
             alertDone(msg);
         }, error => {
             handleErrors(error);
@@ -338,12 +350,12 @@ async function editRequest(e, user) {
             return [
                 document.getElementById('email').value,
                 document.getElementById('msg').value
-            ]
+            ];
         }
-    })
+    });
     // TO-DO: update request
     if (formValues) {
-        Swal.fire(JSON.stringify(formValues))
+        Swal.fire(JSON.stringify(formValues));
     }
 }
 

@@ -385,9 +385,8 @@ class FirebaseIntegration {
         doc(userID);
     return firebase.firestore().
         collection(this.testify('entry')).
-        where('type', '==', 'driveRequest').
+        where('type', '==', 'request').
         where('creator', '==', creator).
-        where('departureTime', '>', new Date()).
         get().
         then((requests) => {
           return Promise.all(requests.docs.map((request) => {
@@ -398,7 +397,6 @@ class FirebaseIntegration {
             return firebase.firestore().
                 collection(this.testify('entry')).
                 where('type', '==', 'drive').
-                where('departureTime', '>', new Date()).
                 where('fromCity', '==', fromCity).
                 where('toCity', '==', toCity).
                 get();
