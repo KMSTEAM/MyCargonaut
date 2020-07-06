@@ -92,7 +92,7 @@ function storeDrive(){
 
             let vehicle = vehicles.find(v => v.data.name.localeCompare(vehicleName) === 0);
 
-            FirebaseIntegration.createEntry('drive',startPlace,endPlace,startDate,endDate,price,description,[],vehicle.id,user.uid);
+            FirebaseIntegration.createEntry('drive',startPlace,endPlace,startDate,endDate,price,-1,description,[],vehicle.id,user.uid);
 
             document.getElementById('inputForm').hidden = true;
             document.getElementById('confirmation').hidden = false;
