@@ -171,17 +171,32 @@ class FirebaseIntegration {
   }
 
   /**
-   * Gets Offers from and to a user
+   * Gets Offers for a user
    * @param userID {string}
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getOffersForUser(userID) {
-    return Promise.all([
-      // this._getXForUser('offer', 'creator', userID),
-      this._getXForUser('offer', 'createdFor', userID),
-    ]).then((offers) => {
-      return offers.flat();
-    });
+    return this._getXForUser('offer', 'createdFor', userID);
+  }
+
+  /**
+   * Gets Offers from a user
+   * @param userID {string}
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getOffersFromUser(userID) {
+    return this._getXForUser('offer', 'creator', userID);
+  }
+
+  /**
+   * Get accepted Offers from a user
+   * @param userID {string}
+   * @returns {Promise<Array<{id: string, data: object}>>}
+   */
+  static getAcceptedOffersFromUser(userID) {
+    return this.getOffersFromUser(userID).then((offers) => offers.filter(({data}) =>
+        data.state === 'accepted'
+      ));
   }
 
   /**
