@@ -81,8 +81,6 @@ async function setMatch(match) {
         data = match;
     }
 
-    console.log(match)
-
     /*var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
     departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2})., "$1").substring(0, 5);
     var arrivalTime = new Date(data.arrivalTime * 1000).toDateString().substring(0, 9);
@@ -155,7 +153,6 @@ async function setDrive(drive) {
 }
 
 async function setRequest(request) {
-    console.log(request);
     var data = request.data;
     if (!data) {
         // document is snapshot, start reading directly
@@ -193,11 +190,12 @@ async function setRequest(request) {
 
 async function setOffer(offer, request) {
     var data = offer.data;
+    console.log(data)
     if (!data) {
         // document is snapshot, start reading directly
         data = offer;
     }
-    var creator = await FirebaseIntegration.getUserByID(data.createdBy.id).then(user => {
+    var creator = await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
         return username;
     });
@@ -241,7 +239,7 @@ async function renderOffers(offers) {
             if (!vehicle) {
                 vehicle = 'Not Available';
             }
-            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
+            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime.toLocaleString() + "<br>" + offer.drive.arrivalTime.toLocaleString() + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + "€ <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
         }
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
@@ -309,6 +307,7 @@ function loadToMeOfferedDrives() {
         if (user) {
             FirebaseIntegration.getAllMyOpenOffers(user.uid)
                 .then(async (offers) => {
+                    console.log(offers)
                     renderOffers(offers);
                 }, error => {
                     handleErrors(error);

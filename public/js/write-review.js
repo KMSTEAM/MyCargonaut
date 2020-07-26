@@ -16,7 +16,7 @@ function writeReview() {
             const review = document.getElementById("review").value;
             console.log(reviewed, reviewer, stars, review);
             FirebaseIntegration.createReview(reviewed, reviewer, review, stars);
-            // location.href = 'dash.html';
+            location.href = 'dash.html';
         }
     });
 }
