@@ -117,7 +117,9 @@ async function setMatch(match) {
         arrivalTime: arrivalTime,
         price: data.price,
         vehicle: vehicle,
-        type: type
+        type: type,
+        request: match.request,
+        userId: match.userId
     };
 }
 
@@ -151,7 +153,6 @@ async function setDrive(drive) {
 }
 
 async function setRequest(request) {
-    console.log(request);
     var data = request.data;
     if (!data) {
         // document is snapshot, start reading directly
@@ -189,11 +190,12 @@ async function setRequest(request) {
 
 async function setOffer(offer, request) {
     var data = offer.data;
+    console.log(data)
     if (!data) {
         // document is snapshot, start reading directly
         data = offer;
     }
-    var creator = await FirebaseIntegration.getUserByID(data.createdBy.id).then(user => {
+    var creator = await FirebaseIntegration.getUserByID(data.creator.id).then(user => {
         const username = DisplayName(user);
         return username;
     });
@@ -237,7 +239,7 @@ async function renderOffers(offers) {
             if (!vehicle) {
                 vehicle = 'Not Available';
             }
-            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime + "<br>" + offer.drive.arrivalTime + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + " <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
+            offerCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-warning\">Offer</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + offer.request.fromCity + " to " + offer.request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:<br>Arrival\:<br>Creator: <br>Vehicle: <br>Price: <br></div><div class=\"column text-center\">" + offer.request.departureTime.toLocaleString() + "<br>" + offer.drive.arrivalTime.toLocaleString() + " <br>" + offer.createdBy + "<br>" + vehicle + " <br>" + offer.price + "€ <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\"  onClick=\"acceptOffer(event,'" + offers[i].id + "')\" style=\"margin-right: 10px;\">Accept</button><button class=\"btn btn-default\"   onClick=\"rejectOffer(event,'" + offers[i].id + "')\">Reject</button></div></div></div></div>";            
         }
     } else {
         offerCardHtml = "<tr><td colspan=\"5\">You don't have any offers yet</td></tr>";
@@ -251,7 +253,7 @@ async function renderRequests(requests) {
         for (let i = 0; i < requests.length; i++) {
             request = await setRequest(requests[i]);
             requestsList.push(request);
-            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br></div><div class=\"column text-center\">" + request.departureTime.toLocaleString() + " <br>" + request.creator + "</div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>";
+            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br></div><div class=\"column text-center\">" + request.departureTime.toLocaleString() + " <br>" + request.creator + "</div></div></div></div></div>"; // editbutton: <div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div>
         }
     } else {
         requestCardHtml = "<tr><td colspan=\"5\">You don't have any requests yet</td></tr>";
@@ -261,11 +263,12 @@ async function renderRequests(requests) {
 
 async function renderMatches(matches) {
     var matchCardHtml = '';
+    console.log(matches)
     if (matches && matches.length > 0) {
         for (let i = 0; i < matches.length; i++) {
             match = await setMatch(matches[i]);
             matchesList.push(match);
-            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime.toLocaleString() + " <br>" + match.arrivalTime.toLocaleString() + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " € <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"getInTouch(event,'"+ match.creator.id +"')\">Get in Touch!</button></div></div></div></div>";
+            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime.toLocaleString() + " <br>" + match.arrivalTime.toLocaleString() + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " € <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"createOffer(event,'"+ match.id +"','"+ match.request +"','"+ match.userId +"','"+ match.creator.id +"','"+ match.price +"')\">Create offer!</button></div></div></div></div>";
         }
     } else {
         matchCardHtml = "<tr><td colspan=\"5\">Sorry, we couldn't find any match!</td></tr>";
@@ -304,6 +307,7 @@ function loadToMeOfferedDrives() {
         if (user) {
             FirebaseIntegration.getAllMyOpenOffers(user.uid)
                 .then(async (offers) => {
+                    console.log(offers)
                     renderOffers(offers);
                 }, error => {
                     handleErrors(error);
@@ -332,6 +336,19 @@ async function acceptOffer(e, offerId){
             e.target.parentElement.className = 'panel-footer text-center';
             e.target.parentElement.innerHTML = '<div class="bg-success">Accepted</div>';
             var msg = 'Offer Accepted';
+            alertDone(msg);
+        }, error => {
+            handleErrors(error);
+        });
+}
+
+async function createOffer(e, driveID, requestID, creatorID, createForID, price){
+    e.preventDefault();
+    await FirebaseIntegration.createOffer(driveID, requestID, creatorID, createForID, price)
+        .then(() => {
+            e.target.parentElement.className = 'panel-footer text-center';
+            e.target.parentElement.innerHTML = '<div class="bg-success">Offer created</div>';
+            var msg = 'Offer created';
             alertDone(msg);
         }, error => {
             handleErrors(error);
@@ -380,6 +397,7 @@ async function getInTouch(e, user){
 }
 
 function handleErrors(error) {
+    console.log(error)
     var errorCode = error.code;
     var errorMessage = error.message;
     Swal.fire({

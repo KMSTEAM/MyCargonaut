@@ -4,7 +4,6 @@ window.onload = function () {
 };
 
 function loadOffers() {
-    //FirebaseIntegration.loginUser("seckeichhorn@gmail.com", "cargonaut")
 
     console.log("load");
 
@@ -23,17 +22,17 @@ function loadOffers() {
                             FirebaseIntegration.getXByRef(offers[i].data.drive).then(
                                 (drive) => {
                                     console.log("id: " + drive.id + "date: " + drive.data.arrivalTime)
+                                    console.log(drive)
                                     date = new Date(drive.data.arrivalTime);
-                                    console.log(date)
                                     fromCity = drive.data.fromCity;
                                     toCity = drive.data.toCity;
-                                    offersListHtml += "<tr><td>" + date.toLocaleDateString() + "</td><td>" + fromCity + "</td><td>" + toCity + "</td><td>" + price + "€</td><td>" + state + "</td><td><button class=\"btn btn-primary \" id=\"" + id + "\" onClick=\"acceptOffer(this.id)\">Accept</button> <button class=\"btn btn-secondary \" id=\"" + id + "\" onClick=\"rejectOffer(this.id)\">Reject</button></td></tr>";
-                                    console.log(offersListHtml)
+                                    driver = drive.data.creator.id;
+                                    offersListHtml += "<tr><td>" + date.toLocaleDateString() + "</td><td>" + fromCity + "</td><td>" + toCity + "</td><td>" + price + "€</td><td>" + state + "</td><td><button class=\"btn btn-primary \" id=\"" + id + "\" onClick=\"payDrive(this.id)\">Pay</button> <button class=\"btn btn-secondary \" id=\"" + driver + "\" onClick=\"writeReview(this.id)\">Review</button></td></tr>";
                                 }
                             ).then(() => document.getElementById("offersList").innerHTML = offersListHtml);
                         }
                     } else {
-                        document.getElementById("offersList").innerHTML = "<tr><td colspan=\"5\">You haven't got any offers for your offers yet</td></tr>";
+                        document.getElementById("offersList").innerHTML = "<tr><td colspan=\"6\">You haven't got any booked drives yet</td></tr>";
                     }
                 }
             );
@@ -41,17 +40,16 @@ function loadOffers() {
     });
 }
 
-function acceptOffer(id) {
+function payDrive(id) {
 
-    FirebaseIntegration.updateOfferState(id, "accepted");
+    FirebaseIntegration.updateOfferState(id, "paid");
     loadOffers();
 
 }
 
-function rejectOffer(id) {
+function writeReview(id) {
 
-    FirebaseIntegration.updateOfferState(id, "rejected");
-    loadOffers();
+    window.location.href = "write-review.html?id=" + id;
 
 }
 
