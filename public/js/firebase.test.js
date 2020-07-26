@@ -183,7 +183,7 @@ describe('#getOffersForUser()', function() {
     offers.should.have.lengthOf(1);
   });
   it('lists offers from the user', async function() {
-    const offers = await FirebaseIntegration.getOffersForUser(user2.uid);
+    const offers = await FirebaseIntegration.getOffersFromUser(user2.uid);
     offers.should.have.lengthOf(1);
   });
 });
