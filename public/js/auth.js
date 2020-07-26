@@ -45,22 +45,7 @@ singupBtn.addEventListener("click", (e) => {
             });
         console.log(error);
     });
-    
-
-    auth.createUserWithEmailAndPassword(email, password).then(creds => {
-        // creds.user has user account details.
-        singupForm.reset();
-        sendEmailVerification().then(() => {
-            window.location.href = "dash.html";
-        })
-    }, () => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops.. Something went wrong!',
-            text: 'Make sure you filled up all fields correctly!'
-        });
-    })
-})
+});
 
 const loginForm = document.querySelector('#loginForm');
 const loginBtn = document.getElementById("login-btn");
