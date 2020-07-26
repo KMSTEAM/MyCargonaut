@@ -177,7 +177,7 @@ class FirebaseIntegration {
    */
   static getOffersForUser(userID) {
     return Promise.all([
-      this._getXForUser('offer', 'creator', userID),
+      // this._getXForUser('offer', 'creator', userID),
       this._getXForUser('offer', 'createdFor', userID),
     ]).then((offers) => {
       return offers.flat();
@@ -394,18 +394,28 @@ class FirebaseIntegration {
               fromCity,
               toCity,
             } = request.data();
+            const id = request.id;
             return firebase.firestore().
                 collection(this.testify('entry')).
                 where('type', '==', 'drive').
                 where('fromCity', '==', fromCity).
                 where('toCity', '==', toCity).
-                get();
+                get().then((drive) => {
+                  return {
+                    id, 
+                    drive
+                  };
+                });
           })).then((driveRefs) => {
-            return driveRefs.flat().map((driveRef) => {
-              return driveRef.docs.map((drive) => {
+            console.log(driveRefs)
+            return driveRefs.flat().map(({id, drive}) => {
+              console.log(drive)
+              return drive.docs.map((drive) => {
                 return {
                   id: drive.id,
                   data: drive.data(),
+                  request: id,
+                  userId: userID
                 };
               });
             }).flat();

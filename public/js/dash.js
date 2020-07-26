@@ -81,6 +81,8 @@ async function setMatch(match) {
         data = match;
     }
 
+    console.log(match)
+
     /*var departureTime = new Date(data.departureTime * 1000).toDateString().substring(0, 9);
     departureTime += ', ' + new Date(data.departureTime * 1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2})., "$1").substring(0, 5);
     var arrivalTime = new Date(data.arrivalTime * 1000).toDateString().substring(0, 9);
@@ -117,7 +119,9 @@ async function setMatch(match) {
         arrivalTime: arrivalTime,
         price: data.price,
         vehicle: vehicle,
-        type: type
+        type: type,
+        request: match.request,
+        userId: match.userId
     };
 }
 
@@ -251,7 +255,7 @@ async function renderRequests(requests) {
         for (let i = 0; i < requests.length; i++) {
             request = await setRequest(requests[i]);
             requestsList.push(request);
-            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br></div><div class=\"column text-center\">" + request.departureTime.toLocaleString() + " <br>" + request.creator + "</div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div></div></div></div>";
+            requestCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-error\">Request</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + request.fromCity + " to " + request.toCity + "</div><div class=\"panel-subtitle text-gray\"></div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Departure\:  <br>Creator: <br></div><div class=\"column text-center\">" + request.departureTime.toLocaleString() + " <br>" + request.creator + "</div></div></div></div></div>"; // editbutton: <div class=\"panel-footer text-right\"><button class=\"btn btn-default\" href=\"#panelDetails\">Edit</button></div>
         }
     } else {
         requestCardHtml = "<tr><td colspan=\"5\">You don't have any requests yet</td></tr>";
@@ -261,11 +265,12 @@ async function renderRequests(requests) {
 
 async function renderMatches(matches) {
     var matchCardHtml = '';
+    console.log(matches)
     if (matches && matches.length > 0) {
         for (let i = 0; i < matches.length; i++) {
             match = await setMatch(matches[i]);
             matchesList.push(match);
-            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime.toLocaleString() + " <br>" + match.arrivalTime.toLocaleString() + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " € <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"getInTouch(event,'"+ match.creator.id +"')\">Get in Touch!</button></div></div></div></div>";
+            matchCardHtml += "<div class=\"column col-6 col-xs-12\"><div class=\"panel\" ><div class=\"panel-header text-center\"><span class=\"label label-rounded label-success\">Match</span><div class=\"panel-title\"><div class=\"panel-title h5\">From " + match.fromCity + " to " + match.toCity + "</div><div class=\"panel-subtitle text-gray\">Recommended for you</div></div></div><div class=\"panel-body\"><div class=\"columns\"><div class=\"column col-3\">Type\:<br>Departure\:<br>Arrival\:<br>Creator:<br>Vehicle:<br>Price\:<br></div><div class=\"column text-center\">" + match.type + "<br>" + match.departureTime.toLocaleString() + " <br>" + match.arrivalTime.toLocaleString() + " <br>" + match.creator.name + " <br>" + match.vehicle + "<br>" + match.price + " € <br></div></div><div class=\"panel-footer text-right\"><button class=\"btn btn-primary\" onClick=\"createOffer(event,'"+ match.id +"','"+ match.request +"','"+ match.userId +"','"+ match.creator.id +"','"+ match.price +"')\">Create offer!</button></div></div></div></div>";
         }
     } else {
         matchCardHtml = "<tr><td colspan=\"5\">Sorry, we couldn't find any match!</td></tr>";
@@ -338,6 +343,19 @@ async function acceptOffer(e, offerId){
         });
 }
 
+async function createOffer(e, driveID, requestID, creatorID, createForID, price){
+    e.preventDefault();
+    await FirebaseIntegration.createOffer(driveID, requestID, creatorID, createForID, price)
+        .then(() => {
+            e.target.parentElement.className = 'panel-footer text-center';
+            e.target.parentElement.innerHTML = '<div class="bg-success">Offer created</div>';
+            var msg = 'Offer created';
+            alertDone(msg);
+        }, error => {
+            handleErrors(error);
+        });
+}
+
 async function editRequest(e, user) {
     e.preventDefault();
     // TO-DO: fire swal input modal with request data to modify it
@@ -380,6 +398,7 @@ async function getInTouch(e, user){
 }
 
 function handleErrors(error) {
+    console.log(error)
     var errorCode = error.code;
     var errorMessage = error.message;
     Swal.fire({

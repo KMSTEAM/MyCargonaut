@@ -34,7 +34,7 @@ function loadDrives() {
                             }
                         };
                     } else {
-                        document.getElementById("drivesList").innerHTML = "<tr><td colspan=\"5\">You haven't got any drives for your drives yet</td></tr>";
+                        document.getElementById("drivesList").innerHTML = "<tr><td colspan=\"6\">You haven't got any drives for your drives yet</td></tr>";
                     }
                 }
             );

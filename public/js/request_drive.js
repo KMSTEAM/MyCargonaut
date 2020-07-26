@@ -9,13 +9,26 @@ addCargo_btn.addEventListener('click', function (e) {
     addCargo();
 });
 
+const removeCargo_btn = document.getElementById('removeCargo');
+removeCargo_btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    removeCargo();
+});
+
 document.getElementById('More_Requests_Button').addEventListener('click',function (e) {
     e.preventDefault();
     loadInputForms();
 });
 
+function removeCargo() {
+    cargoCounter--;
+    console.log(cargoCounter);
+    document.getElementById("#" + cargoCounter).outerHTML = "";
+    // document.getElementById("#" + cargoCounter).remove;
+}
+
 function addCargo(){
-    let cargoHTML = `<div class=\"form-group\">
+    let cargoHTML = `<div class=\"form-group py-2\" id=\"#${cargoCounter}\">
                         <div class=\"input-group col-12\"> 
                            <span class=\"input-group-addon bg-primary col-2\">#${cargoCounter}</span>
                            <input id=\"descr${cargoCounter}\" type=\"text\" class=\"form-input\" placeholder=\"Description\">
@@ -24,13 +37,13 @@ function addCargo(){
                           <span class=\"input-group-addon col-2\">Weight</span>
                           <input id=\"weight${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1kg\">
                           <span class=\"input-group-addon col-2\">Height</span>
-                          <input id=\"height${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                          <input id=\"height${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1cm\">
                         </div>
                         <div class=\"input-group col-12\">
                           <span class=\"input-group-addon col-2\">Depth</span>
-                          <input id=\"depth${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                          <input id=\"depth${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1cm\">
                           <span class=\"input-group-addon col-2\">Width</span>
-                          <input id=\"width${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1m\">
+                          <input id=\"width${cargoCounter}\" type=\"text\" class=\"form-input col-4\" placeholder=\"1cm\">
                         </div>
                      </div>`;
 

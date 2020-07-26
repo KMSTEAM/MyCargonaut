@@ -14,8 +14,9 @@ function writeReview() {
             const reviewer = user.uid;
             const stars = document.getElementById("stars").value;
             const review = document.getElementById("review").value;
+            console.log(reviewed, reviewer, stars, review);
             FirebaseIntegration.createReview(reviewed, reviewer, review, stars);
-            location.href = 'dash.html';
+            // location.href = 'dash.html';
         }
     });
 }
@@ -24,6 +25,7 @@ function getReviewedUser() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const userId = urlParams.get('id');
+    console.log(userId);
     return userId
 }
 

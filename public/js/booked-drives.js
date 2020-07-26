@@ -33,7 +33,7 @@ function loadOffers() {
                             ).then(() => document.getElementById("offersList").innerHTML = offersListHtml);
                         }
                     } else {
-                        document.getElementById("offersList").innerHTML = "<tr><td colspan=\"5\">You haven't got any offers for your offers yet</td></tr>";
+                        document.getElementById("offersList").innerHTML = "<tr><td colspan=\"6\">You haven't got any booked drives yet</td></tr>";
                     }
                 }
             );

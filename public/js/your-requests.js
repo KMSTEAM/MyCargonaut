@@ -24,7 +24,7 @@ function loadRequests() {
 
                         }
                     } else {
-                        requestsListHtml += "<tr><td colspan=\"5\">You haven't published any requests yet</td></tr>";
+                        requestsListHtml += "<tr><td colspan=\"4\">You haven't published any requests yet</td></tr>";
                     }
                     document.getElementById("requestsList").innerHTML = requestsListHtml;
                 }
