@@ -106,14 +106,14 @@
             <div class="docs-content" id="content">
                 <div class="container">
                     <h3 class="s-title">Your Account</h3>
-                    <p>Hello <b>John</b>! Here you can check your account data</p>
+                    <p>Hello <b><span id="helloUsername">...</span></b>! Here you can check your account data</p>
                     <div class="columns">
                         <div class="column col-12">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-title h5">
-                                        John Beinecke
-                                        <figure class="avatar" data-initial="JB" style="background-color: #5755d9;">
+                                        <span id="userTitle">Loading...</span>
+                                        <figure id="userAvatar" class="avatar" data-initial="L" style="background-color: #5755d9;">
                                         </figure>
                                     </div>
                                     <div class="card-subtitle text-gray"></div>
@@ -121,25 +121,14 @@
                                 <div class="card-body">
                                     <div class="columns">
                                         <div class="column col-3">
-                                            Gender: <br>
-                                            Age: <br>
-                                            Member since: <br>
-                                            Executed drives: <br>
+                                            Birthate:<br>
                                         </div>
                                         <div class="column col-9">
-                                            male <br>
-                                            27 <br>
-                                            2020 <br>
-                                            13 <br>
+                                            <span id="birthdate"></span> <br>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="btn btn-primary next" data-toggle="modal"
-                                        href="changePassword.html">Change
-                                        password</a>
-                                    <a class="btn btn-danger next" href="delete-account.html" id="deleteAccount">Delete
-                                        account</a>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +142,11 @@
                                     <p>There is no payment method here yet.</p>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="btn btn-primary next" href="add-payment.html">Add new method</a>
+                                    <button class="btn btn-primary next" disabled
+                                            title="Only cash payments are supported at the moment"
+                                            style="pointer-events: auto;">
+                                        Add new method
+                                    </button>
                                 </div>
                             </div>
                         </div>

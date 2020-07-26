@@ -2,15 +2,21 @@ window.onload = function(){
     FirebaseIntegration.checkForRedirect();
 };
 
-document.getElementById("deleteAccount").addEventListener("click", deleteAccount);
+const helloUsername = document.getElementById('helloUsername');
+const userTitle = document.getElementById('userTitle');
+const userAvatar = document.getElementById('userAvatar');
+const birthdateSpan = document.getElementById('birthdate');
 
-function changePassword() {
-console.log(123);
-}
-
-function deleteAccount() {
-    console.log(456);
-}
+firebase.auth().onAuthStateChanged( (user) => {
+    FirebaseIntegration.getUserByID(user.uid).then((dbUser) => {
+       const username = dbUser.data.username;
+       const birthdate = dbUser.data.birthDate;
+       helloUsername.innerText = username;
+       userTitle.innerText = username;
+       userAvatar.dataset.initial = username[0] || 'U';
+       birthdateSpan.innerText = birthdate.toLocaleString();
+    });
+});
 
 const logoutBtn = document.getElementById("logout-btn");
 
