@@ -194,9 +194,14 @@ class FirebaseIntegration {
    * @returns {Promise<Array<{id: string, data: object}>>}
    */
   static getAcceptedOffersFromUser(userID) {
-    return this.getOffersFromUser(userID).then((offers) => offers.filter(({data}) =>
+    const offers = this.getOffersFromUser(userID).then((offers) => offers.filter(({data}) =>
         data.state === 'accepted'
-      ));
+    ));
+    return offers.then((offer) => Promise.all(offer.map((offer) => {
+      return offer.data.drive.get().then((drive) => {
+        return {offer, drive: {id: drive.id, data: drive.data()}};
+      });
+    })));
   }
 
   /**
